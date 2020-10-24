@@ -15,10 +15,9 @@ CintaAzul class
 agregar: unaMena
 	contenido add: unaMena.! !
 
-!CintaAzul class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:06:04'!
-agregarTodo: unaColeccion
-
-	contenido addAll: unaColeccion.! !
+!CintaAzul class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:24:25'!
+agregarTodo: unaColeccionDeMenas
+	contenido addAll: unaColeccionDeMenas.! !
 
 !CintaAzul class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:24:38'!
 cantidadDe: unaMenaDeMuestra
@@ -32,7 +31,7 @@ cantidadDeMenas
 conectarA: unDestino
 	destino := unDestino.! !
 
-!CintaAzul class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:25:22'!
+!CintaAzul class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:25:28'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -68,10 +67,9 @@ CintaRoja class
 agregar: unaMena
 	contenido add: unaMena.! !
 
-!CintaRoja class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 13:59:12'!
-agregarTodo: unaColeccion
-
-	contenido addAll: unaColeccion.! !
+!CintaRoja class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:24:11'!
+agregarTodo: unaColeccionDeMenas
+	contenido addAll: unaColeccionDeMenas.! !
 
 !CintaRoja class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:24:46'!
 cantidadDe: unaMenaDeMuestra
@@ -85,7 +83,7 @@ cantidadDeMenas
 conectarA: unDestino
 	destino := unDestino.! !
 
-!CintaRoja class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:25:22'!
+!CintaRoja class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:25:28'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -121,10 +119,9 @@ Contenedor class
 agregar: unaMena
 	contenido add: unaMena.! !
 
-!Contenedor class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 13:54:25'!
-agregarTodo: unaColeccion
-
-	contenido addAll: unaColeccion.! !
+!Contenedor class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:24:34'!
+agregarTodo: unaColeccionDeMenas
+	contenido addAll: unaColeccionDeMenas.! !
 
 !Contenedor class methodsFor: 'as yet unclassified' stamp: 'SF 10/23/2020 00:38:00'!
 cantidadDe: unaMenaDeMuestra
@@ -134,7 +131,7 @@ cantidadDe: unaMenaDeMuestra
 cantidadDeMenas
 	^contenido size.! !
 
-!Contenedor class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:25:22'!
+!Contenedor class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:25:28'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -166,7 +163,7 @@ conectarA: unDestino
 extraer
 	destino agregar: #carbon.! !
 
-!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:25:22'!
+!ExtractorDeCarbon class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:25:28'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
@@ -194,7 +191,7 @@ conectarA: unDestino
 extraer
 	destino agregar: #hierro.! !
 
-!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'LF 10/23/2020 14:25:22'!
+!ExtractorDeHierro class methodsFor: 'as yet unclassified' stamp: 'LF 10/24/2020 11:25:28'!
 initializeCollaboratorsFromFile
 	"Auto generated method for loading purposes - Do not modify it"
 
