@@ -21,8 +21,8 @@ TestCase subclass: #CustomerBookTest
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/2/2020 21:48:52'!
-comprobarContenidoDelLibro: elLibro with: primerValor with: segundoValor with: tercerValor with: condicionExtra
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/3/2020 16:43:31'!
+checkCustomerBookContent: elLibro with: primerValor with: segundoValor with: tercerValor with: condicionExtra
 
 	self assert: primerValor equals: elLibro numberOfActiveCustomers.
 	self assert: segundoValor equals: elLibro numberOfSuspendedCustomers.
@@ -119,20 +119,20 @@ test04CanNotRemoveAnInvalidCustomer
 			self assert: (customerBook includesCustomerNamed: johnLennon) ]
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/2/2020 21:50:30'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/3/2020 16:44:58'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook|
 	
 	customerBook := self crearLibroConUnClienteSuspendido.
 	
-	self comprobarContenidoDelLibro: customerBook with: 0 with: 1 with: 1 with: [self assert: (customerBook includesCustomerNamed: 'Paul McCartney')].
+	self checkCustomerBookContent: customerBook with: 0 with: 1 with: 1 with: [self assert: (customerBook includesCustomerNamed: 'Paul McCartney')].
 	
 
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/2/2020 21:50:39'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/3/2020 16:45:17'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook |
@@ -140,7 +140,7 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	customerBook := self crearLibroConUnClienteSuspendido.
 	customerBook removeCustomerNamed: 'Paul McCartney'.
 	
-	self comprobarContenidoDelLibro: customerBook with: 0 with: 0 with: 0 with: [self deny: (customerBook includesCustomerNamed: 'Paul McCartney')].
+	self checkCustomerBookContent: customerBook with: 0 with: 0 with: 0 with: [self deny: (customerBook includesCustomerNamed: 'Paul McCartney')].
 
 
 	
