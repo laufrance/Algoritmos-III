@@ -45,11 +45,11 @@ checkExecutionTimeUnder: operationToExecute with: milliseconds
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 14:41:06'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:15:36'!
 checkIfCustomerIsOnTheCustomerBook: customerBook with: customerName
 			
-			self assert: customerBook numberOfCustomers = 1.
-			self assert: (customerBook includesCustomerNamed: customerName) 
+	self assert: customerBook numberOfCustomers = 1.
+	self assert: (customerBook includesCustomerNamed: customerName) 
 ! !
 
 !CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 13:21:28'!
@@ -63,31 +63,15 @@ countMilliseconds: condition
 	
 	^millisecondsAfterRunning-millisecondsBeforeRunning.! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 13:35:47'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:14:49'!
 createCustomerBookWithASuspendedCustomer
+	
+	^(self createCustomerBookWithCustomerNamed: 'Paul McCartney') suspendCustomerNamed: 'Paul McCartney'.! !
 
-	| customerBook paulMcCartney|
-	
-	customerBook := CustomerBook new.
-	paulMcCartney := 'Paul McCartney'.
-	
-	customerBook addCustomerNamed: paulMcCartney.
-	customerBook suspendCustomerNamed: paulMcCartney.
-	
-	^customerBook.! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 14:45:51'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:15:03'!
 createCustomerBookWithCustomerNamed: customersName
-
-	| customerBook customer|
 	
-	customerBook := CustomerBook new.
-	customer := customersName.
-	
-	customerBook addCustomerNamed: customer.
-
-	
-	^customerBook.! !
+	^(self createEmptyCustomerBook) addCustomerNamed: customersName.! !
 
 !CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 13:24:23'!
 createEmptyCustomerBook
@@ -150,7 +134,7 @@ test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 14:51:02'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:07:50'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook |
@@ -158,7 +142,11 @@ test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 	customerBook := self createCustomerBookWithASuspendedCustomer. 
 	customerBook removeCustomerNamed: 'Paul McCartney'.
 	
-	self checkCustomerBookContent: customerBook value with: 0 with: 0 with: 0 with: [self deny: (customerBook includesCustomerNamed: 'Paul McCartney')].
+	self checkCustomerBookContent: customerBook value 
+		with: 0 
+			with: 0 
+				with: 0 
+					with: [self deny: (customerBook includesCustomerNamed: 'Paul McCartney')].
 
 
 	
@@ -200,11 +188,11 @@ Object subclass: #CustomerBook
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBook methodsFor: 'initialization' stamp: 'LL 10/30/2020 12:22:04'!
+!CustomerBook methodsFor: 'initialization' stamp: 'MW 11/4/2020 15:58:40'!
 initialize
 
 	active := OrderedCollection new.
-	suspended:= OrderedCollection new.! !
+	suspended := OrderedCollection new.! !
 
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
@@ -215,28 +203,30 @@ addCustomerNamed: aName
 	
 	active add: aName ! !
 
-!CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
-removeCustomerNamed: aName 
- 
-	1 to: active size do: 
-	[ :index |
-		aName = (active at: index)
-			ifTrue: [
-				active removeAt: index.
-				^ aName 
-			] 
-	].
+!CustomerBook methodsFor: 'customer management' stamp: 'MW 11/4/2020 16:10:04'!
+removeCustomerIn: theCollection with: aName 
 
-	1 to: suspended size do: 	
+	1 to: theCollection size do: 	
 	[ :index |
-		aName = (suspended at: index)
+		aName = (theCollection at: index)
 			ifTrue: [
-				suspended removeAt: index.
+				theCollection removeAt: index.
 				^ aName 
-			] 
+			]
+			ifFalse:[
+				^ NotFound signal
+			]
 	].
 	
-	^ NotFound signal.
+	
+! !
+
+!CustomerBook methodsFor: 'customer management' stamp: 'MW 11/4/2020 16:10:16'!
+removeCustomerNamed: aName 
+	
+	self removeCustomerIn: active with: aName.
+	self removeCustomerIn: suspended with: aName.
+	
 ! !
 
 !CustomerBook methodsFor: 'customer management' stamp: 'NR 4/3/2019 10:14:26'!
