@@ -21,69 +21,6 @@ TestCase subclass: #CustomerBookTest
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:55:13'!
-checkCustomersInCustomerBook: customerBook withArgument: firstDesiredQuantityOfCustomers withArgument: secondDesiredQuantityOfCustomers withArgument: thirdDesiredQuantityOfCustomers withCondition: extraConditionToEvaluate
-
-	self assert: firstDesiredQuantityOfCustomers equals: customerBook numberOfActiveCustomers.
-	self assert: secondDesiredQuantityOfCustomers equals:  customerBook numberOfSuspendedCustomers.
-	self assert: thirdDesiredQuantityOfCustomers equals:  customerBook numberOfCustomers.
-	self assert: extraConditionToEvaluate.
-
-	
-
-	
-
-	
-	
-	
-	! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:51:21'!
-checkExecutionTimeUnder: operationTime with: timeExpected
-
-	self assert: operationTime < (timeExpected)
-	
-		! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:15:36'!
-checkIfCustomerIsOnTheCustomerBook: customerBook with: customerName
-			
-	self assert: customerBook numberOfCustomers = 1.
-	self assert: (customerBook includesCustomerNamed: customerName) 
-! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:50:53'!
-countExecutionTimeInMilliseconds: operationToExecute
-
-	| millisecondsBeforeRunning millisecondsAfterRunning |
-	
-	millisecondsBeforeRunning := Time millisecondClockValue * millisecond.
-	
-	operationToExecute.
-	
-	millisecondsAfterRunning := Time millisecondClockValue * millisecond.
-	
-	^millisecondsAfterRunning-millisecondsBeforeRunning.! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 11:41:57'!
-createCustomerBookSuspendingCustomerNamed: customerToSuspend
-	
-	^(self createCustomerBookWithCustomerNamed: customerToSuspend) suspendCustomerNamed: customerToSuspend.! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/4/2020 15:15:03'!
-createCustomerBookWithCustomerNamed: customersName
-	
-	^(self createEmptyCustomerBook) addCustomerNamed: customersName.! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/4/2020 13:24:23'!
-createEmptyCustomerBook
-
-	| customerBook|
-	
-	customerBook := CustomerBook new.
-	
-	^customerBook.! !
-
 !CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:50:53'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
@@ -178,6 +115,71 @@ test08CanNotSuspendAnAlreadySuspendedCustomer
 		on: CantSuspend 
 		do: [ :anError | 
 			self checkIfCustomerIsOnTheCustomerBook: customerBook with: 'Paul McCartney'.]! !
+
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:55:13'!
+checkCustomersInCustomerBook: customerBook withArgument: firstDesiredQuantityOfCustomers withArgument: secondDesiredQuantityOfCustomers withArgument: thirdDesiredQuantityOfCustomers withCondition: extraConditionToEvaluate
+
+	self assert: firstDesiredQuantityOfCustomers equals: customerBook numberOfActiveCustomers.
+	self assert: secondDesiredQuantityOfCustomers equals:  customerBook numberOfSuspendedCustomers.
+	self assert: thirdDesiredQuantityOfCustomers equals:  customerBook numberOfCustomers.
+	self assert: extraConditionToEvaluate.
+
+	
+
+	
+
+	
+	
+	
+	! !
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:51:21'!
+checkExecutionTimeUnder: operationTime with: timeExpected
+
+	self assert: operationTime < (timeExpected)
+	
+		! !
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'MW 11/4/2020 15:15:36'!
+checkIfCustomerIsOnTheCustomerBook: customerBook with: customerName
+			
+	self assert: customerBook numberOfCustomers = 1.
+	self assert: (customerBook includesCustomerNamed: customerName) 
+! !
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:50:53'!
+countExecutionTimeInMilliseconds: operationToExecute
+
+	| millisecondsBeforeRunning millisecondsAfterRunning |
+	
+	millisecondsBeforeRunning := Time millisecondClockValue * millisecond.
+	
+	operationToExecute.
+	
+	millisecondsAfterRunning := Time millisecondClockValue * millisecond.
+	
+	^millisecondsAfterRunning-millisecondsBeforeRunning.! !
+
+
+!CustomerBookTest methodsFor: 'initialization' stamp: 'LF 11/6/2020 11:41:57'!
+createCustomerBookSuspendingCustomerNamed: customerToSuspend
+	
+	^(self createCustomerBookWithCustomerNamed: customerToSuspend) suspendCustomerNamed: customerToSuspend.! !
+
+!CustomerBookTest methodsFor: 'initialization' stamp: 'MW 11/4/2020 15:15:03'!
+createCustomerBookWithCustomerNamed: customersName
+	
+	^(self createEmptyCustomerBook) addCustomerNamed: customersName.! !
+
+!CustomerBookTest methodsFor: 'initialization' stamp: 'LF 11/4/2020 13:24:23'!
+createEmptyCustomerBook
+
+	| customerBook|
+	
+	customerBook := CustomerBook new.
+	
+	^customerBook.! !
 
 
 !classDefinition: #CustomerBook category: 'CodigoRepetido-Ejercicio'!
