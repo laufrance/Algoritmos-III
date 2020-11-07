@@ -21,19 +21,30 @@ TestCase subclass: #CustomerBookTest
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:50:53'!
-test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:32:07'!
+checkFaliureOn: customerBook withBlock: blockToTestFaliureOn withError: anErrorToThrow  with: aCostumer
 
+	blockToTestFaliureOn
+		on: anErrorToThrow 
+		do: [ :anError | 
+			self checkIfCustomerIsOnTheCustomerBook: customerBook with: aCostumer.]! !
+
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:18:42'!
+test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
+	
 	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (self createCustomerBookWithCustomerNamed: 'Paul McCartney')] value 
 		with: (50 * millisecond).
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 12:50:53'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:17:28'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
-	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: ((self createCustomerBookWithCustomerNamed: 'Paul McCartney') 
-		removeCustomerNamed: 'Paul McCartney')] value 
+	| customerBook |
+	
+	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'.
+	
+	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (customerBook 		removeCustomerNamed: 'Paul McCartney')] value 
 			with: (100 * millisecond).
 	
 ! !
@@ -48,91 +59,65 @@ test03CanNotAddACustomerWithEmptyName
 			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
 			self assert: self createEmptyCustomerBook isEmpty ]! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 11:44:46'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:34:54'!
 test04CanNotRemoveAnInvalidCustomer
 	
 	| customerBook|
 			
 	customerBook := self createCustomerBookWithCustomerNamed: 'John Lennon'.
 	
-	[customerBook removeCustomerNamed: 'Paul McCartney'.
-	self fail ]
-		on: NotFound 
-		do: [ :anError | 
-			self checkIfCustomerIsOnTheCustomerBook: customerBook with: 'John Lennon'.]
+	self checkFaliureOn: customerBook withBlock: 	[customerBook removeCustomerNamed: 'Paul McCartney'. self fail ] withError: NotFound with: 'John Lennon'.
+	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/6/2020 15:08:33'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:19:24'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook |
 	
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'. 
 	
-	self checkCustomersInCustomerBook: (customerBook)
-		withArgument: 0 
-			withArgument: 1 
-				withArgument: 1 
-					withCondition: [(customerBook  includesCustomerNamed: 'Paul McCartney')].! !
+	self checkIfCustomersInCustomerBook: (customerBook)
+		withCondition: 0 
+			withCondition: 1 
+				withCondition: 1 
+					withArgument: [(customerBook  includesCustomerNamed: 'Paul McCartney')].! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/6/2020 15:08:11'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:21:16'!
 test06RemovingASuspendedCustomerShouldRemoveItFromCustomerBook
 
 	| customerBook |
 	
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'. 
+	
 	customerBook removeCustomerNamed: 'Paul McCartney'.
 	
-	self checkCustomersInCustomerBook: customerBook value 
-		withArgument: 0 
-			withArgument: 0 
-				withArgument: 0 
-					withCondition: [(customerBook includesCustomerNamed: 'Paul McCartney') not].! !
+	self checkIfCustomersInCustomerBook: customerBook value 
+		withCondition: 0 
+			withCondition: 0 
+				withCondition: 0 
+					withArgument: [(customerBook includesCustomerNamed: 'Paul McCartney') not].! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/6/2020 11:41:57'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:30:28'!
 test07CanNotSuspendAnInvalidCustomer
 	
 	| customerBook |
 			
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'.
 	
-	[ customerBook suspendCustomerNamed: 'Ringo Starr'.
-	self fail ]
-		on: CantSuspend 
-		do: [ :anError | 
-			self checkIfCustomerIsOnTheCustomerBook: customerBook with: 'Paul McCartney'.]
+	self checkFaliureOn: customerBook withBlock: 	[ customerBook suspendCustomerNamed: 'Ringo Starr'. self fail ] withError: CantSuspend with: 'Paul McCartney'.
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/6/2020 15:08:19'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:32:27'!
 test08CanNotSuspendAnAlreadySuspendedCustomer
 	
 	| customerBook |
 			
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'.
-		
-	[ customerBook suspendCustomerNamed: 'Paul McCartney'.
-	self fail ]
-		on: CantSuspend 
-		do: [ :anError | 
-			self checkIfCustomerIsOnTheCustomerBook: customerBook with: 'Paul McCartney'.]! !
-
-
-!CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:55:13'!
-checkCustomersInCustomerBook: customerBook withArgument: firstDesiredQuantityOfCustomers withArgument: secondDesiredQuantityOfCustomers withArgument: thirdDesiredQuantityOfCustomers withCondition: extraConditionToEvaluate
-
-	self assert: firstDesiredQuantityOfCustomers equals: customerBook numberOfActiveCustomers.
-	self assert: secondDesiredQuantityOfCustomers equals:  customerBook numberOfSuspendedCustomers.
-	self assert: thirdDesiredQuantityOfCustomers equals:  customerBook numberOfCustomers.
-	self assert: extraConditionToEvaluate.
-
 	
+	self checkFaliureOn: customerBook withBlock: 	[ customerBook suspendCustomerNamed: 'Paul McCartney'. self fail ] withError: CantSuspend with: 'Paul McCartney'.
+! !
 
-	
-
-	
-	
-	
-	! !
 
 !CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:51:21'!
 checkExecutionTimeUnder: operationTime with: timeExpected
@@ -147,6 +132,23 @@ checkIfCustomerIsOnTheCustomerBook: customerBook with: customerName
 	self assert: customerBook numberOfCustomers = 1.
 	self assert: (customerBook includesCustomerNamed: customerName) 
 ! !
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/7/2020 18:19:24'!
+checkIfCustomersInCustomerBook: customerBook withCondition: firstDesiredQuantityOfCustomers withCondition: secondDesiredQuantityOfCustomers withCondition: thirdDesiredQuantityOfCustomers withArgument: extraConditionToEvaluate
+
+	self assert: firstDesiredQuantityOfCustomers equals: customerBook numberOfActiveCustomers.
+	self assert: secondDesiredQuantityOfCustomers equals:  customerBook numberOfSuspendedCustomers.
+	self assert: thirdDesiredQuantityOfCustomers equals:  customerBook numberOfCustomers.
+	self assert: extraConditionToEvaluate.
+
+	
+
+	
+
+	
+	
+	
+	! !
 
 !CustomerBookTest methodsFor: 'checking' stamp: 'LF 11/6/2020 12:50:53'!
 countExecutionTimeInMilliseconds: operationToExecute
