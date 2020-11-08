@@ -21,31 +21,21 @@ TestCase subclass: #CustomerBookTest
 	poolDictionaries: ''
 	category: 'CodigoRepetido-Ejercicio'!
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:32:07'!
-checkFaliureOn: customerBook withBlock: blockToTestFaliureOn withError: anErrorToThrow  with: aCostumer
-
-	blockToTestFaliureOn
-		on: anErrorToThrow 
-		do: [ :anError | 
-			self checkIfCustomerIsOnTheCustomerBook: customerBook with: aCostumer.]! !
-
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:18:42'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/8/2020 14:22:51'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 	
-	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (self createCustomerBookWithCustomerNamed: 'Paul McCartney')] value 
-		with: (50 * millisecond).
+	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (self createCustomerBookWithCustomerNamed: 'Paul McCartney')] value with: (50 * millisecond).
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:17:28'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/8/2020 14:22:34'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 	
 	| customerBook |
 	
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'.
 	
-	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (customerBook 		removeCustomerNamed: 'Paul McCartney')] value 
-			with: (100 * millisecond).
+	self checkExecutionTimeUnder: [self countExecutionTimeInMilliseconds: (customerBook 		removeCustomerNamed: 'Paul McCartney')] value with: (100 * millisecond).
 	
 ! !
 
@@ -70,14 +60,14 @@ test04CanNotRemoveAnInvalidCustomer
 	
 ! !
 
-!CustomerBookTest methodsFor: 'tests' stamp: 'LF 11/7/2020 18:19:24'!
+!CustomerBookTest methodsFor: 'tests' stamp: 'MW 11/8/2020 14:22:09'!
 test05SuspendingACustomerShouldNotRemoveItFromCustomerBook
 
 	| customerBook |
 	
 	customerBook := self createCustomerBookSuspendingCustomerNamed: 'Paul McCartney'. 
 	
-	self checkIfCustomersInCustomerBook: (customerBook)
+	self checkIfCustomersInCustomerBook: (customerBook) 
 		withCondition: 0 
 			withCondition: 1 
 				withCondition: 1 
@@ -125,6 +115,14 @@ checkExecutionTimeUnder: operationTime with: timeExpected
 	self assert: operationTime < (timeExpected)
 	
 		! !
+
+!CustomerBookTest methodsFor: 'checking' stamp: 'MW 11/8/2020 14:20:45'!
+checkFaliureOn: customerBook withBlock: blockToTestFaliureOn withError: anErrorToThrow  with: aCostumer
+
+	blockToTestFaliureOn
+		on: anErrorToThrow 
+		do: [ :anError | 
+			self checkIfCustomerIsOnTheCustomerBook: customerBook with: aCostumer.]! !
 
 !CustomerBookTest methodsFor: 'checking' stamp: 'MW 11/4/2020 15:15:36'!
 checkIfCustomerIsOnTheCustomerBook: customerBook with: customerName
