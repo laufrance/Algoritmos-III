@@ -411,13 +411,13 @@ divideFraccion: aDividend
 
 	^ aDividend numerator / ((Entero with: value) * aDividend denominator)! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'LF 11/13/2020 13:58:14'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:09:59'!
 fibonacci
 	
 	self isNegative ifTrue: [self error: Entero negativeFibonacciErrorDescription ].	
 	(self isZero or: [self isOne]) ifTrue: [^Entero with: 1].
 	
-	^ (self - (Entero with: 1)) fibonacci + (self - (Entero with: 2)) fibonacci
+	^(self - (Entero with: 1)) fibonacci + (self - (Entero with: 2)) fibonacci
 		! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 20:21:26'!
@@ -535,9 +535,8 @@ Numero subclass: #Fraccion
 	^aMultiplier multiplyFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/13/2020 13:26:52'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:11:29'!
 + anAdder 
-	
 	
 	^anAdder addToFraccion: self.! !
 
@@ -553,17 +552,17 @@ Numero subclass: #Fraccion
 	^aDivisor divideFraccion: self.
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 22:19:44'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:10:33'!
 addToEntero: anAuguend
 		
-		^Fraccion with: (anAuguend  * denominator ) +  numerator over:  denominator ! !
+		^Fraccion with: (anAuguend * denominator ) + numerator over: denominator ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 22:08:21'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:10:43'!
 addToFraccion: anAuguend
 	
 	| newDenominator newNumerator |
-	newNumerator := (anAuguend numerator *  denominator) + (anAuguend denominator *  numerator).
-	newDenominator := anAuguend denominator *  denominator.
+	newNumerator := (anAuguend numerator * denominator) + (anAuguend denominator * numerator).
+	newDenominator := anAuguend denominator * denominator.
 	
 	^newNumerator / newDenominator
 ! !
@@ -575,33 +574,33 @@ divideEntero: aDividend
 	
 	! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/13/2020 13:37:20'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:10:54'!
 divideFraccion: aDividend
 
-	^ (aDividend numerator * denominator)/ (aDividend denominator * numerator) ! !
+	^ (aDividend numerator * denominator) / (aDividend denominator * numerator) ! !
 
 !Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 20:22:22'!
 multiplyEntero: aMultiplicand
 
 	^numerator * aMultiplicand / denominator! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 21:45:15'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:11:02'!
 multiplyFraccion: aMultiplicand
 
-	^(aMultiplicand numerator * numerator) / (aMultiplicand denominator *  denominator)
+	^(aMultiplicand numerator * numerator) / (aMultiplicand denominator * denominator)
 ! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/12/2020 20:28:48'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:11:08'!
 subEntero: aMinuend
 		
-		^Fraccion with: (aMinuend  * denominator ) - numerator over: denominator! !
+		^Fraccion with: (aMinuend * denominator ) - numerator over: denominator! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'LF 11/13/2020 13:28:46'!
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'MW 11/15/2020 22:11:17'!
 subFraccion: aMinuend
 	
 	| newDenominator newNumerator |
-	newNumerator := (aMinuend numerator * denominator) - (aMinuend denominator *  numerator).
-	newDenominator := aMinuend denominator *  denominator.
+	newNumerator := (aMinuend numerator * denominator) - (aMinuend denominator * numerator).
+	newDenominator := aMinuend denominator * denominator.
 	
 	^newNumerator / newDenominator ! !
 
