@@ -65,20 +65,34 @@ initializeOn: aCoordinate facing: aCardinalPoint
 	index := 1.! !
 
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:07:21'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:05:33'!
 executeCommands: aListOfCommands
 	
-	aListOfCommands size timesRepeat: [(MarsRover allSubclasses detect: [: aClass | aClass canHandle: cardinalPoint]) executeSpecificCommand: (aListOfCommands at: index)].
+	|theCardinalRule|
+	
+	aListOfCommands size timesRepeat: 
+	
+	[theCardinalRule := (MarsRover allSubclasses detect: [: aClass | aClass canHandle: cardinalPoint]).
+		
+		theCardinalRule := theCardinalRule withCoordinateOn: coordinate executing: (aListOfCommands at: index).
+		
+		theCardinalRule executeSpecificCommand.
+		
+		coordinate := coordinate + theCardinalRule ruleCoordinate.
+		
+		cardinalPoint := theCardinalRule ruleCardinal.
+		
+		index:= index +1].
 	index := 1.
 	
 
-	
+	"theCardinalRule executeSpecificCommand: (aListOfCommands at: index)"
 
 
 	! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:13:43'!
-executeSpecificCommand: aCommand
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:04:50'!
+executeSpecificCommand
 	
 	self subclassResponsibility.
 	
@@ -109,19 +123,44 @@ on: aCoordinate facing: aCardinalPoint
 
 !classDefinition: #CardinalEsteRule category: 'Mars Rover'!
 MarsRover subclass: #CardinalEsteRule
-	instanceVariableNames: ''
+	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:12:21'!
-executeSpecificCommand: aCommand
+!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:57:27'!
+executeSpecificCommand
 	
-	(aCommand = $f) ifTrue: [coordinate := coordinate + `1@0`]. 
-	(aCommand = $b) ifTrue: [coordinate := coordinate - `1@0`]. 
-	(aCommand = $r) ifTrue: [cardinalPoint := 'S']. 
-	(aCommand = $l) ifTrue: [cardinalPoint := 'N'].
-	index := index + 1.! !
+	(ruleCommand = $f) ifTrue: [ruleCoordinate := ruleCoordinate + `1@0`]. 
+	(ruleCommand = $b) ifTrue: [ruleCoordinate := ruleCoordinate - `1@0`]. 
+	(ruleCommand = $r) ifTrue: [ruleCardinal := 'S']. 
+	(ruleCommand = $l) ifTrue: [ruleCardinal := 'N'].! !
+
+!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:54:10'!
+initializeWith: aCoordinate executing: aSpecificCommand
+
+	ruleCoordinate  := aCoordinate.
+
+	ruleCardinal  := 'E'.
+	
+	ruleCommand := aSpecificCommand.
+
+
+
+
+
+
+! !
+
+!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:58:30'!
+ruleCardinal
+
+^ruleCardinal! !
+
+!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:58:19'!
+ruleCoordinate
+
+^ruleCoordinate ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -134,33 +173,53 @@ canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'E'! !
 
-!CardinalEsteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:20:19'!
-executeSpecificCommand: aCommand
-	
-	^self new executeSpecificCommand: aCommand.
-	
-	! !
+!CardinalEsteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:43:52'!
+withCoordinateOn: aCoordinate executing: aSpecificCommand
 
-!CardinalEsteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:23:02'!
-initializeWith: aCommand
-	! !
+	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #CardinalNorteRule category: 'Mars Rover'!
 MarsRover subclass: #CardinalNorteRule
-	instanceVariableNames: ''
+	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:11:23'!
-executeSpecificCommand: aCommand
+!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:02:07'!
+executeSpecificCommand
 	
-	(aCommand = $f) ifTrue: [coordinate := coordinate + `0@1`]. 
-	(aCommand = $b) ifTrue: [coordinate := coordinate - `0@1`]. 
-	(aCommand = $r) ifTrue: [cardinalPoint := 'E']. 
-	(aCommand = $l) ifTrue: [cardinalPoint := 'O'].
-	index := index + 1.! !
+	(ruleCommand = $f) ifTrue: [ruleCoordinate := ruleCoordinate + `0@1`]. 
+	(ruleCommand = $b) ifTrue: [ruleCoordinate := ruleCoordinate - `0@1`]. 
+	(ruleCommand = $r) ifTrue: [ruleCardinal := 'E']. 
+	(ruleCommand = $l) ifTrue: [ruleCardinal := 'O'].
+! !
+
+!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:41'!
+initializeWith: aCoordinate executing: aSpecificCommand
+
+	ruleCoordinate  := aCoordinate.
+
+	ruleCardinal  := 'N'.
+	
+	ruleCommand := aSpecificCommand.
+
+
+
+
+
+
+! !
+
+!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:12'!
+ruleCardinal
+
+	^ruleCardinal! !
+
+!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:17'!
+ruleCoordinate
+
+	^ruleCoordinate ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -173,27 +232,53 @@ canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'N'! !
 
-!CardinalNorteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:20:28'!
-executeSpecificCommand: aCommand
-	
-	^self new executeSpecificCommand: aCommand.! !
+!CardinalNorteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:46'!
+withCoordinateOn: aCoordinate executing: aSpecificCommand
+
+	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #CardinalOesteRule category: 'Mars Rover'!
 MarsRover subclass: #CardinalOesteRule
-	instanceVariableNames: ''
+	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:13:36'!
-executeSpecificCommand: aCommand
+!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:02:46'!
+executeSpecificCommand
 	
-	(aCommand = $f) ifTrue: [coordinate := coordinate - `1@0`]. 
-	(aCommand = $b) ifTrue: [coordinate := coordinate + `1@0`]. 
-	(aCommand = $r) ifTrue: [cardinalPoint := 'N']. 
-	(aCommand = $l) ifTrue: [cardinalPoint := 'S'].
-	index := index + 1.! !
+	(ruleCommand = $f) ifTrue: [ruleCoordinate := ruleCoordinate - `1@0`]. 
+	(ruleCommand = $b) ifTrue: [ruleCoordinate := ruleCoordinate + `1@0`]. 
+	(ruleCommand = $r) ifTrue: [ruleCardinal := 'N']. 
+	(ruleCommand = $l) ifTrue: [ruleCardinal := 'S'].
+! !
+
+!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:48'!
+initializeWith: aCoordinate executing: aSpecificCommand
+
+	ruleCoordinate  := aCoordinate.
+
+	ruleCardinal  := 'O'.
+	
+	ruleCommand := aSpecificCommand.
+
+
+
+
+
+
+! !
+
+!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:25'!
+ruleCardinal
+
+	^ruleCardinal! !
+
+!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:22'!
+ruleCoordinate
+
+	^ruleCoordinate ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -206,27 +291,53 @@ canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'O'! !
 
-!CardinalOesteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:20:35'!
-executeSpecificCommand: aCommand
-	
-	^self new executeSpecificCommand: aCommand.! !
+!CardinalOesteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:49'!
+withCoordinateOn: aCoordinate executing: aSpecificCommand
+
+	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #CardinalSurRule category: 'Mars Rover'!
 MarsRover subclass: #CardinalSurRule
-	instanceVariableNames: ''
+	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:12:54'!
-executeSpecificCommand: aCommand
+!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:23'!
+executeSpecificCommand
 	
-	(aCommand = $f) ifTrue: [coordinate := coordinate - `0@1`]. 
-	(aCommand = $b) ifTrue: [coordinate := coordinate + `0@1`]. 
-	(aCommand = $r) ifTrue: [cardinalPoint := 'O']. 
-	(aCommand = $l) ifTrue: [cardinalPoint := 'E'].
-	index := index + 1.! !
+	(ruleCommand = $f) ifTrue: [ruleCoordinate := ruleCoordinate - `0@1`]. 
+	(ruleCommand = $b) ifTrue: [ruleCoordinate := ruleCoordinate + `0@1`]. 
+	(ruleCommand = $r) ifTrue: [ruleCardinal := 'O']. 
+	(ruleCommand = $l) ifTrue: [ruleCardinal := 'E'].
+! !
+
+!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:58'!
+initializeWith: aCoordinate executing: aSpecificCommand
+
+	ruleCoordinate  := aCoordinate.
+
+	ruleCardinal  := 'S'.
+	
+	ruleCommand := aSpecificCommand.
+
+
+
+
+
+
+! !
+
+!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:29'!
+ruleCardinal
+
+	^ruleCardinal! !
+
+!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:32'!
+ruleCoordinate
+
+	^ruleCoordinate ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -239,7 +350,7 @@ canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'S'! !
 
-!CardinalSurRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:20:40'!
-executeSpecificCommand: aCommand
-	
-	^self new executeSpecificCommand: aCommand.! !
+!CardinalSurRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:54'!
+withCoordinateOn: aCoordinate executing: aSpecificCommand
+
+	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
