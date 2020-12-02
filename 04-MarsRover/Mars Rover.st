@@ -65,7 +65,7 @@ initializeOn: aCoordinate facing: aCardinalPoint
 	index := 1.! !
 
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:05:33'!
+!MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:27:04'!
 executeCommands: aListOfCommands
 	
 	|theCardinalRule|
@@ -76,8 +76,6 @@ executeCommands: aListOfCommands
 		
 		theCardinalRule := theCardinalRule withCoordinateOn: coordinate executing: (aListOfCommands at: index).
 		
-		theCardinalRule executeSpecificCommand.
-		
 		coordinate := coordinate + theCardinalRule ruleCoordinate.
 		
 		cardinalPoint := theCardinalRule ruleCardinal.
@@ -85,10 +83,6 @@ executeCommands: aListOfCommands
 		index:= index +1].
 	index := 1.
 	
-
-	"theCardinalRule executeSpecificCommand: (aListOfCommands at: index)"
-
-
 	! !
 
 !MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:04:50'!
@@ -136,7 +130,7 @@ executeSpecificCommand
 	(ruleCommand = $r) ifTrue: [ruleCardinal := 'S']. 
 	(ruleCommand = $l) ifTrue: [ruleCardinal := 'N'].! !
 
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:54:10'!
+!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:36'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -144,6 +138,8 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	ruleCardinal  := 'E'.
 	
 	ruleCommand := aSpecificCommand.
+	
+		self executeSpecificCommand.
 
 
 
@@ -195,7 +191,7 @@ executeSpecificCommand
 	(ruleCommand = $l) ifTrue: [ruleCardinal := 'O'].
 ! !
 
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:41'!
+!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:24'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -203,6 +199,8 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	ruleCardinal  := 'N'.
 	
 	ruleCommand := aSpecificCommand.
+	
+	self executeSpecificCommand.
 
 
 
@@ -254,7 +252,7 @@ executeSpecificCommand
 	(ruleCommand = $l) ifTrue: [ruleCardinal := 'S'].
 ! !
 
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:48'!
+!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:42'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -262,6 +260,8 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	ruleCardinal  := 'O'.
 	
 	ruleCommand := aSpecificCommand.
+	
+		self executeSpecificCommand.
 
 
 
@@ -313,7 +313,7 @@ executeSpecificCommand
 	(ruleCommand = $l) ifTrue: [ruleCardinal := 'E'].
 ! !
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:03:58'!
+!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:46'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -321,6 +321,8 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	ruleCardinal  := 'S'.
 	
 	ruleCommand := aSpecificCommand.
+	
+		self executeSpecificCommand.
 
 
 
