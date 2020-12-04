@@ -139,7 +139,7 @@ test09MarsRoverCanInitializeInAnValidCoordinate
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:04:41'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:26:55'!
 test10MarsRoverMovesForwardWithTheCommandf
 	
 	| marsRoverVehicle |
@@ -148,66 +148,54 @@ test10MarsRoverMovesForwardWithTheCommandf
 	
 	marsRoverVehicle executeCommands: 'f'.
 	
-	self assert: (marsRoverVehicle movedForwardFrom: 0@0).
-	"self deny: (marsRoverVehicle movedBackwards).
-	self deny: (marsRoverVehicle turnedLeft).
-	self deny: (marsRoverVehicle turnedRight)."
+	self assert: (marsRoverVehicle isOn: 0@1 facing: 'N').
+
 
 	
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:05:18'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:35:53'!
 test11MarsRoverMovesBackwardsWithTheCommandb
 	
 	| marsRoverVehicle |
 	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'E'.
 	
 	marsRoverVehicle executeCommands: 'b'.
 	
-	self assert: (marsRoverVehicle movedBackwardsFrom: 0@0).
-	"self deny: (marsRoverVehicle movedForward).
-	self deny: (marsRoverVehicle turnedLeft).
-	self deny: (marsRoverVehicle turnedRight)."
+	self assert: (marsRoverVehicle isOn: -1@0 facing: 'E').
+
 
 	
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:04:47'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:36:30'!
 test12MarsRoverTurnsLeftWithTheCommandl
 	
 	| marsRoverVehicle |
 	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'S'.
 	
 	marsRoverVehicle executeCommands: 'l'.
 	
-	self assert: (marsRoverVehicle turnedLeftFrom: 'N').
+	self assert: (marsRoverVehicle isOn: 0@0 facing: 'E').
 
 	
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:02:30'!
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:36:54'!
 test13MarsRoverTurnsRightWithTheCommandr
-	
-	"Z ; Zero
-	O ; One
-	M ; Many (or More complex) hasta aca estamos me parece
-	B ; Boundary Behaviors (se me ocurre que tenga elementos erroneos probamos con letras y despues un numero)
-	I ; Interface definition (definirlo en alguna coordenada que no existe o algun punto cardinal feo (hacer de a un caso, osea primero la coordenada y despues el cardinal)
-	E ; Exercise Exceptional behavior ( ni idea)
-	S ; Simple Scenarios, Simple Solutions (ni idea tampoco)"
-	
+
 	| marsRoverVehicle |
 	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'O'.
 	
 	marsRoverVehicle executeCommands: 'r'.
 	
-	self assert: (marsRoverVehicle turnedRightFrom: 'N').
+	self assert: (marsRoverVehicle isOn: 0@0 facing: 'N').
 
 	
 	
@@ -229,70 +217,52 @@ initializeOn: aCoordinate facing: aCardinalPoint
 	index := 1.! !
 
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 14:53:25'!
-canExecute: aListOfCommands
-	
-	^('fblr' includesAllOf: aListOfCommands)! !
-
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:33:38'!
-canInitializeFacing: aCardinalPoint
-
-	^'NSOE' includes: (cardinalPoint at: 1)! !
-
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:40:53'!
-canInitializeInPosition: aPosition 
-	
-	^aPosition isPoint.! !
-
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:24:21'!
-executeCommands: aListOfCommands
-	
-	|theCardinalRule|
-	
-	('NSOE' includes: (cardinalPoint at: 1)) ifTrue:[
-		aListOfCommands size timesRepeat: 
-	
-		[ theCardinalRule := (MarsRover allSubclasses detect: [: aClass | aClass canHandle: cardinalPoint]).
-		
-			('fblr' includes: (aListOfCommands at: index)) ifTrue: [theCardinalRule := theCardinalRule withCoordinateOn: `0@0` executing: (aListOfCommands at: index).
-		
-			coordinate := coordinate + theCardinalRule ruleCoordinate.
-			cardinalPoint := theCardinalRule ruleCardinal.
-		
-			index:= index +1 ].].
-	].
-	
-	
-	index := 1.
-	
-	! !
-
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:22:55'!
+!MarsRover methodsFor: 'comparing' stamp: 'LF 12/3/2020 10:22:55'!
 isOn: aCoordinate facing: aCardinalPoint
 	
 	^(coordinate = aCoordinate) and: [^cardinalPoint = aCardinalPoint].! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:59:06'!
-movedBackwardsFrom: aCoordinate
 
-	^aCoordinate isNotEqualTo: coordinate.
+!MarsRover methodsFor: 'executing' stamp: 'LF 12/4/2020 10:34:52'!
+executeCommands: aListOfCommands
+	
+	|theMarsRoverProcessor theSetMarsRoverProcessor|
+	
+	theMarsRoverProcessor := MarsRoverProcessor allSubclasses detect: [: aClass | aClass canHandle: cardinalPoint] ifNone: [^index].
+	
+	aListOfCommands size timesRepeat: 
+
+		[theSetMarsRoverProcessor := theMarsRoverProcessor withCoordinateOn: `0@0` executing: (aListOfCommands at: index).
+	
+		self updateMarsRoverPositionWithTheInformationOf: theSetMarsRoverProcessor.
+	
+		index:= index +1 ].
+		
+	index := 1.
 	
 	! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:57:52'!
-movedForwardFrom: aCoordinate
+!MarsRover methodsFor: 'executing' stamp: 'LF 12/4/2020 09:47:32'!
+updateMarsRoverPositionWithTheInformationOf: theMarsRoverProcessor
+
+	coordinate := coordinate + theMarsRoverProcessor ruleCoordinate.
+	cardinalPoint := theMarsRoverProcessor ruleCardinal! !
+
+
+!MarsRover methodsFor: 'assertions' stamp: 'MW 12/3/2020 14:53:25'!
+canExecute: aListOfCommands
 	
-	^aCoordinate isNotEqualTo: coordinate.! !
+	^('fblr' includesAllOf: aListOfCommands)! !
 
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:02:01'!
-turnedLeftFrom: aCardinalPoint
+!MarsRover methodsFor: 'assertions' stamp: 'MW 12/3/2020 15:33:38'!
+canInitializeFacing: aCardinalPoint
+
+	^'NSOE' includes: (cardinalPoint at: 1)! !
+
+!MarsRover methodsFor: 'assertions' stamp: 'MW 12/3/2020 15:40:53'!
+canInitializeInPosition: aPosition 
 	
-	^aCardinalPoint isNotEqualTo: cardinalPoint.! !
-
-!MarsRover methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:03:46'!
-turnedRightFrom: aCardinalPoint
-
-	^aCardinalPoint isNotEqualTo: cardinalPoint.! !
+	^aPosition isPoint.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -306,21 +276,41 @@ on: aCoordinate facing: aCardinalPoint
 	^self new initializeOn: aCoordinate facing: aCardinalPoint.! !
 
 
-!classDefinition: #CardinalEsteRule category: 'Mars Rover'!
-MarsRover subclass: #CardinalEsteRule
+!classDefinition: #MarsRoverProcessor category: 'Mars Rover'!
+Object subclass: #MarsRoverProcessor
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'Mars Rover'!
+
+
+!classDefinition: #CardinalEsteActions category: 'Mars Rover'!
+MarsRoverProcessor subclass: #CardinalEsteActions
 	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 14:12:51'!
+!CardinalEsteActions methodsFor: 'executing' stamp: 'LF 12/4/2020 10:33:52'!
 executeSpecificCommand
 	
-	ruleCoordinate := (CardinalEsteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCoordinateWith: ruleCoordinate.	
-	ruleCardinal := (CardinalEsteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCardinal.
+	ruleCoordinate := (CardinalEsteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCoordinateWith: ruleCoordinate.	
+	ruleCardinal := (CardinalEsteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCardinal.
 ! !
 
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 14:04:48'!
+
+!CardinalEsteActions methodsFor: 'value' stamp: 'LF 12/2/2020 15:58:30'!
+ruleCardinal
+
+^ruleCardinal! !
+
+!CardinalEsteActions methodsFor: 'value' stamp: 'LF 12/2/2020 15:58:19'!
+ruleCoordinate
+
+^ruleCoordinate ! !
+
+
+!CardinalEsteActions methodsFor: 'initialization' stamp: 'MW 12/3/2020 14:04:48'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -338,35 +328,25 @@ initializeWith: aCoordinate executing: aSpecificCommand
 
 ! !
 
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:58:30'!
-ruleCardinal
-
-^ruleCardinal! !
-
-!CardinalEsteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:58:19'!
-ruleCoordinate
-
-^ruleCoordinate ! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CardinalEsteRule class' category: 'Mars Rover'!
-CardinalEsteRule class
+!classDefinition: 'CardinalEsteActions class' category: 'Mars Rover'!
+CardinalEsteActions class
 	instanceVariableNames: ''!
 
-!CardinalEsteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:18'!
+!CardinalEsteActions class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:18'!
 canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'E'! !
 
-!CardinalEsteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:43:52'!
+!CardinalEsteActions class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 15:43:52'!
 withCoordinateOn: aCoordinate executing: aSpecificCommand
 
 	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #MoveEsteBackwards category: 'Mars Rover'!
-CardinalEsteRule subclass: #MoveEsteBackwards
+CardinalEsteActions subclass: #MoveEsteBackwards
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -396,7 +376,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #MoveEsteForward category: 'Mars Rover'!
-CardinalEsteRule subclass: #MoveEsteForward
+CardinalEsteActions subclass: #MoveEsteForward
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -425,7 +405,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnEsteLeft category: 'Mars Rover'!
-CardinalEsteRule subclass: #TurnEsteLeft
+CardinalEsteActions subclass: #TurnEsteLeft
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -454,7 +434,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnEsteRight category: 'Mars Rover'!
-CardinalEsteRule subclass: #TurnEsteRight
+CardinalEsteActions subclass: #TurnEsteRight
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -482,20 +462,32 @@ changeCoordinateWith: theRuleCoordinate
 	^theRuleCoordinate! !
 
 
-!classDefinition: #CardinalNorteRule category: 'Mars Rover'!
-MarsRover subclass: #CardinalNorteRule
+!classDefinition: #CardinalNorteActions category: 'Mars Rover'!
+MarsRoverProcessor subclass: #CardinalNorteActions
 	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:07:18'!
+!CardinalNorteActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:12'!
+ruleCardinal
+
+	^ruleCardinal! !
+
+!CardinalNorteActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:17'!
+ruleCoordinate
+
+	^ruleCoordinate ! !
+
+
+!CardinalNorteActions methodsFor: 'executing' stamp: 'LF 12/4/2020 10:33:11'!
 executeSpecificCommand
 	
-	ruleCoordinate := (CardinalNorteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCoordinateWith: ruleCoordinate.	
-	ruleCardinal := (CardinalNorteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCardinal.! !
+	ruleCoordinate := (CardinalNorteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand] ifNone: [^0]) changeCoordinateWith: ruleCoordinate.	
+	ruleCardinal := (CardinalNorteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCardinal.! !
 
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:24'!
+
+!CardinalNorteActions methodsFor: 'initialization' stamp: 'LF 12/2/2020 16:26:24'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -513,35 +505,25 @@ initializeWith: aCoordinate executing: aSpecificCommand
 
 ! !
 
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:12'!
-ruleCardinal
-
-	^ruleCardinal! !
-
-!CardinalNorteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:17'!
-ruleCoordinate
-
-	^ruleCoordinate ! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CardinalNorteRule class' category: 'Mars Rover'!
-CardinalNorteRule class
+!classDefinition: 'CardinalNorteActions class' category: 'Mars Rover'!
+CardinalNorteActions class
 	instanceVariableNames: ''!
 
-!CardinalNorteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:34'!
+!CardinalNorteActions class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:34'!
 canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'N'! !
 
-!CardinalNorteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:46'!
+!CardinalNorteActions class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:46'!
 withCoordinateOn: aCoordinate executing: aSpecificCommand
 
 	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #MoveNorteBackwards category: 'Mars Rover'!
-CardinalNorteRule subclass: #MoveNorteBackwards
+CardinalNorteActions subclass: #MoveNorteBackwards
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -571,7 +553,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #MoveNorteForward category: 'Mars Rover'!
-CardinalNorteRule subclass: #MoveNorteForward
+CardinalNorteActions subclass: #MoveNorteForward
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -600,7 +582,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnNorteLeft category: 'Mars Rover'!
-CardinalNorteRule subclass: #TurnNorteLeft
+CardinalNorteActions subclass: #TurnNorteLeft
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -629,7 +611,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnNorteRight category: 'Mars Rover'!
-CardinalNorteRule subclass: #TurnNorteRight
+CardinalNorteActions subclass: #TurnNorteRight
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -657,21 +639,33 @@ changeCoordinateWith: theRuleCoordinate
 	^theRuleCoordinate! !
 
 
-!classDefinition: #CardinalOesteRule category: 'Mars Rover'!
-MarsRover subclass: #CardinalOesteRule
+!classDefinition: #CardinalOesteActions category: 'Mars Rover'!
+MarsRoverProcessor subclass: #CardinalOesteActions
 	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:07:10'!
+!CardinalOesteActions methodsFor: 'executing' stamp: 'LF 12/4/2020 10:34:08'!
 executeSpecificCommand
 	
-	ruleCoordinate := (CardinalOesteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCoordinateWith: ruleCoordinate.	
-	ruleCardinal := (CardinalOesteRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCardinal.
+	ruleCoordinate := (CardinalOesteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCoordinateWith: ruleCoordinate.	
+	ruleCardinal := (CardinalOesteActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCardinal.
 	! !
 
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:42'!
+
+!CardinalOesteActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:25'!
+ruleCardinal
+
+	^ruleCardinal! !
+
+!CardinalOesteActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:22'!
+ruleCoordinate
+
+	^ruleCoordinate ! !
+
+
+!CardinalOesteActions methodsFor: 'initialization' stamp: 'LF 12/2/2020 16:26:42'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -689,35 +683,25 @@ initializeWith: aCoordinate executing: aSpecificCommand
 
 ! !
 
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:25'!
-ruleCardinal
-
-	^ruleCardinal! !
-
-!CardinalOesteRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:22'!
-ruleCoordinate
-
-	^ruleCoordinate ! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CardinalOesteRule class' category: 'Mars Rover'!
-CardinalOesteRule class
+!classDefinition: 'CardinalOesteActions class' category: 'Mars Rover'!
+CardinalOesteActions class
 	instanceVariableNames: ''!
 
-!CardinalOesteRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:41'!
+!CardinalOesteActions class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:41'!
 canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'O'! !
 
-!CardinalOesteRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:49'!
+!CardinalOesteActions class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:49'!
 withCoordinateOn: aCoordinate executing: aSpecificCommand
 
 	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #MoveOesteBackwards category: 'Mars Rover'!
-CardinalOesteRule subclass: #MoveOesteBackwards
+CardinalOesteActions subclass: #MoveOesteBackwards
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -747,7 +731,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #MoveOesteForward category: 'Mars Rover'!
-CardinalOesteRule subclass: #MoveOesteForward
+CardinalOesteActions subclass: #MoveOesteForward
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -776,7 +760,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnOesteLeft category: 'Mars Rover'!
-CardinalOesteRule subclass: #TurnOesteLeft
+CardinalOesteActions subclass: #TurnOesteLeft
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -805,7 +789,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnOesteRight category: 'Mars Rover'!
-CardinalOesteRule subclass: #TurnOesteRight
+CardinalOesteActions subclass: #TurnOesteRight
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -833,21 +817,22 @@ changeCoordinateWith: theRuleCoordinate
 	^theRuleCoordinate! !
 
 
-!classDefinition: #CardinalSurRule category: 'Mars Rover'!
-MarsRover subclass: #CardinalSurRule
+!classDefinition: #CardinalSurActions category: 'Mars Rover'!
+MarsRoverProcessor subclass: #CardinalSurActions
 	instanceVariableNames: 'ruleCoordinate ruleCardinal ruleCommand'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'Mars Rover'!
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:07:04'!
+!CardinalSurActions methodsFor: 'executing' stamp: 'LF 12/4/2020 10:34:15'!
 executeSpecificCommand
 
-	ruleCoordinate := (CardinalSurRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCoordinateWith: ruleCoordinate.	
-	ruleCardinal := (CardinalSurRule allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]) changeCardinal.
+	ruleCoordinate := (CardinalSurActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCoordinateWith: ruleCoordinate.	
+	ruleCardinal := (CardinalSurActions allSubclasses detect: [:aMovement | aMovement canHandle: ruleCommand]ifNone:[^0]) changeCardinal.
 	! !
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:26:46'!
+
+!CardinalSurActions methodsFor: 'initialization' stamp: 'LF 12/2/2020 16:26:46'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -865,35 +850,36 @@ initializeWith: aCoordinate executing: aSpecificCommand
 
 ! !
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:29'!
+
+!CardinalSurActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:29'!
 ruleCardinal
 
 	^ruleCardinal! !
 
-!CardinalSurRule methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:06:32'!
+!CardinalSurActions methodsFor: 'value' stamp: 'LF 12/2/2020 16:06:32'!
 ruleCoordinate
 
 	^ruleCoordinate ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
-!classDefinition: 'CardinalSurRule class' category: 'Mars Rover'!
-CardinalSurRule class
+!classDefinition: 'CardinalSurActions class' category: 'Mars Rover'!
+CardinalSurActions class
 	instanceVariableNames: ''!
 
-!CardinalSurRule class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:47'!
+!CardinalSurActions class methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 15:08:47'!
 canHandle: aCardinalPoint
 
 	^aCardinalPoint = 'S'! !
 
-!CardinalSurRule class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:54'!
+!CardinalSurActions class methodsFor: 'as yet unclassified' stamp: 'LF 12/2/2020 16:00:54'!
 withCoordinateOn: aCoordinate executing: aSpecificCommand
 
 	^self new initializeWith: aCoordinate executing: aSpecificCommand! !
 
 
 !classDefinition: #MoveSurBackwards category: 'Mars Rover'!
-CardinalSurRule subclass: #MoveSurBackwards
+CardinalSurActions subclass: #MoveSurBackwards
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -923,7 +909,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #MoveSurForward category: 'Mars Rover'!
-CardinalSurRule subclass: #MoveSurForward
+CardinalSurActions subclass: #MoveSurForward
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -952,7 +938,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnSurLeft category: 'Mars Rover'!
-CardinalSurRule subclass: #TurnSurLeft
+CardinalSurActions subclass: #TurnSurLeft
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -981,7 +967,7 @@ changeCoordinateWith: theRuleCoordinate
 
 
 !classDefinition: #TurnSurRight category: 'Mars Rover'!
-CardinalSurRule subclass: #TurnSurRight
+CardinalSurActions subclass: #TurnSurRight
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
