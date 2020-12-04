@@ -19,128 +19,8 @@ test01MarsRoverIsOnInitialPositionAfterExecutingAnEmptyCommandsSeries
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/2/2020 14:19:32'!
-test02MarsRoverIsNotOnInitialPositionAfterExecutingACommand
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'f'.
-	
-	self deny: (marsRoverVehicle isOn: 0@0 facing: 'N').
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:07:56'!
-test03MarsRoverIsNotOnInitialPositionAfterExecutingACommandSeries
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'fbrbblfrbfbl'.
-	
-	self deny: (marsRoverVehicle isOn: 0@0 facing: 'N').
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 14:55:59'!
-test04MarsRoverFailsExecutingAllTheCommandsWhenACommandIsInvalid
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'fbrqbml'.
-	
-	self deny: ( marsRoverVehicle canExecute: 'fbrqbml' )
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 14:56:15'!
-test05MarsRoverExecuteCorrectlyAllTheCommandsWhenTheCommandsAreValid
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'f'.
-	
-	self assert: ( marsRoverVehicle canExecute: 'f')
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:26:45'!
-test06MarsRoverCanNotInitializeWithAnInvalidCardinalPoint
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'V'.
-	
-	marsRoverVehicle executeCommands: 'frb'.
-	
-	self deny: (marsRoverVehicle canInitializeFacing: 'V').
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:32:29'!
-test07MarsRoverCanInitializeWithAValidCardinalPoint
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'frb'.
-	
-	self assert: (marsRoverVehicle canInitializeFacing: 'N').
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 15:36:11'!
-test08MarsRoverCanNotInitializeInAnInvalidCoordinate
-
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'frb'.
-	
-	self deny: (marsRoverVehicle canInitializeInPosition: 0).
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 16:07:25'!
-test09MarsRoverCanInitializeInAnValidCoordinate
-	
-	| marsRoverVehicle |
-	
-	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
-	
-	marsRoverVehicle executeCommands: 'frb'.
-	
-	self assert: (marsRoverVehicle canInitializeInPosition: 0@0).
-
-	
-	
-	! !
-
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:26:55'!
-test10MarsRoverMovesForwardWithTheCommandf
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:58'!
+test02MarsRoverMovesForwardWithTheCommandf
 	
 	| marsRoverVehicle |
 	
@@ -155,8 +35,8 @@ test10MarsRoverMovesForwardWithTheCommandf
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:35:53'!
-test11MarsRoverMovesBackwardsWithTheCommandb
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:51'!
+test03MarsRoverMovesBackwardsWithTheCommandb
 	
 	| marsRoverVehicle |
 	
@@ -171,8 +51,8 @@ test11MarsRoverMovesBackwardsWithTheCommandb
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:36:30'!
-test12MarsRoverTurnsLeftWithTheCommandl
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:44'!
+test04MarsRoverTurnsLeftWithTheCommandl
 	
 	| marsRoverVehicle |
 	
@@ -186,8 +66,8 @@ test12MarsRoverTurnsLeftWithTheCommandl
 	
 	! !
 
-!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:36:54'!
-test13MarsRoverTurnsRightWithTheCommandr
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:35'!
+test05MarsRoverTurnsRightWithTheCommandr
 
 	| marsRoverVehicle |
 	
@@ -196,6 +76,126 @@ test13MarsRoverTurnsRightWithTheCommandr
 	marsRoverVehicle executeCommands: 'r'.
 	
 	self assert: (marsRoverVehicle isOn: 0@0 facing: 'N').
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:27'!
+test06MarsRoverIsNotOnInitialPositionAfterExecutingACommand
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'f'.
+	
+	self deny: (marsRoverVehicle isOn: 0@0 facing: 'N').
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:50:14'!
+test07MarsRoverIsNotOnInitialPositionAfterExecutingACommandSeries
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'fbrbblfrbfbl'.
+	
+	self deny: (marsRoverVehicle isOn: 0@0 facing: 'N').
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:54:19'!
+test08MarsRoverFailsExecutingAllTheCommandsWhenACommandIsInvalid
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'fbrqbml'.
+	
+	self deny: ( marsRoverVehicle canExecute: 'fbrqbml' )
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:49:52'!
+test09MarsRoverExecuteCorrectlyAllTheCommandsWhenTheCommandsAreValid
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'f'.
+	
+	self assert: ( marsRoverVehicle canExecute: 'f')
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:49:44'!
+test10MarsRoverCanNotInitializeWithAnInvalidCardinalPoint
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'V'.
+	
+	marsRoverVehicle executeCommands: 'frb'.
+	
+	self deny: (marsRoverVehicle canInitializeFacing: 'V').
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:49:35'!
+test11MarsRoverCanInitializeWithAValidCardinalPoint
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'frb'.
+	
+	self assert: (marsRoverVehicle canInitializeFacing: 'N').
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:49:26'!
+test12MarsRoverCanNotInitializeInAnInvalidCoordinate
+
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'frb'.
+	
+	self deny: (marsRoverVehicle canInitializeInPosition: 0).
+
+	
+	
+	! !
+
+!MarsRoverTest methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:49:18'!
+test13MarsRoverCanInitializeInAnValidCoordinate
+	
+	| marsRoverVehicle |
+	
+	 marsRoverVehicle := MarsRover on: 0@0 facing: 'N'.
+	
+	marsRoverVehicle executeCommands: 'frb'.
+	
+	self assert: (marsRoverVehicle canInitializeInPosition: 0@0).
 
 	
 	
@@ -299,15 +299,15 @@ executeSpecificCommand
 ! !
 
 
-!CardinalEsteActions methodsFor: 'value' stamp: 'LF 12/2/2020 15:58:30'!
+!CardinalEsteActions methodsFor: 'value' stamp: 'MW 12/4/2020 15:58:03'!
 ruleCardinal
 
-^ruleCardinal! !
+	^ruleCardinal! !
 
-!CardinalEsteActions methodsFor: 'value' stamp: 'LF 12/2/2020 15:58:19'!
+!CardinalEsteActions methodsFor: 'value' stamp: 'MW 12/4/2020 15:57:59'!
 ruleCoordinate
 
-^ruleCoordinate ! !
+	^ruleCoordinate ! !
 
 
 !CardinalEsteActions methodsFor: 'initialization' stamp: 'MW 12/3/2020 14:04:48'!
@@ -535,20 +535,20 @@ CardinalNorteActions subclass: #MoveNorteBackwards
 MoveNorteBackwards class
 	instanceVariableNames: ''!
 
-!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:47:21'!
+!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:57:08'!
 canHandle: aCommand
 
-^aCommand = $b.! !
+	^aCommand = $b.! !
 
-!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:48:13'!
+!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:57:04'!
 changeCardinal
 
-^'N'.! !
+	^'N'.! !
 
-!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:49:31'!
+!MoveNorteBackwards class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:56:59'!
 changeCoordinateWith: theRuleCoordinate
 
-^theRuleCoordinate - `0@1`
+	^theRuleCoordinate - `0@1`
 ! !
 
 
@@ -565,20 +565,20 @@ CardinalNorteActions subclass: #MoveNorteForward
 MoveNorteForward class
 	instanceVariableNames: ''!
 
-!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:52:19'!
+!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:57:19'!
 canHandle: aCommand
 
-^aCommand = $f.! !
+	^aCommand = $f.! !
 
-!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:03:14'!
+!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:57:16'!
 changeCardinal
 
-^'N'.! !
+	^'N'.! !
 
-!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:54:16'!
+!MoveNorteForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:57:13'!
 changeCoordinateWith: theRuleCoordinate
 
-^theRuleCoordinate + `0@1`! !
+	^theRuleCoordinate + `0@1`! !
 
 
 !classDefinition: #TurnNorteLeft category: 'Mars Rover'!
@@ -665,7 +665,7 @@ ruleCoordinate
 	^ruleCoordinate ! !
 
 
-!CardinalOesteActions methodsFor: 'initialization' stamp: 'LF 12/2/2020 16:26:42'!
+!CardinalOesteActions methodsFor: 'initialization' stamp: 'MW 12/4/2020 15:41:00'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -674,7 +674,7 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	
 	ruleCommand := aSpecificCommand.
 	
-		self executeSpecificCommand.
+	self executeSpecificCommand.
 
 
 
@@ -832,7 +832,7 @@ executeSpecificCommand
 	! !
 
 
-!CardinalSurActions methodsFor: 'initialization' stamp: 'LF 12/2/2020 16:26:46'!
+!CardinalSurActions methodsFor: 'initialization' stamp: 'MW 12/4/2020 15:40:42'!
 initializeWith: aCoordinate executing: aSpecificCommand
 
 	ruleCoordinate  := aCoordinate.
@@ -841,7 +841,7 @@ initializeWith: aCoordinate executing: aSpecificCommand
 	
 	ruleCommand := aSpecificCommand.
 	
-		self executeSpecificCommand.
+	self executeSpecificCommand.
 
 
 
@@ -921,20 +921,20 @@ CardinalSurActions subclass: #MoveSurForward
 MoveSurForward class
 	instanceVariableNames: ''!
 
-!MoveSurForward class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:52:28'!
+!MoveSurForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:56:01'!
 canHandle: aCommand
 
-^aCommand = $f.! !
+	^aCommand = $f.! !
 
 !MoveSurForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/3/2020 13:06:31'!
 changeCardinal
 
 	^'S'.! !
 
-!MoveSurForward class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:53:12'!
+!MoveSurForward class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:55:54'!
 changeCoordinateWith: theRuleCoordinate
 
-^theRuleCoordinate  - `0@1`! !
+	^theRuleCoordinate  - `0@1`! !
 
 
 !classDefinition: #TurnSurLeft category: 'Mars Rover'!
@@ -979,17 +979,17 @@ CardinalSurActions subclass: #TurnSurRight
 TurnSurRight class
 	instanceVariableNames: ''!
 
-!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:55:06'!
+!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:56:21'!
 canHandle: aCommand
 
-^aCommand = $r.! !
+	^aCommand = $r.! !
 
-!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 10:56:32'!
+!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:56:18'!
 changeCardinal
 
-^'O'! !
+	^'O'! !
 
-!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'LF 12/3/2020 11:04:46'!
+!TurnSurRight class methodsFor: 'as yet unclassified' stamp: 'MW 12/4/2020 15:56:14'!
 changeCoordinateWith: theRuleCoordinate
 
-^theRuleCoordinate! !
+	^theRuleCoordinate! !
