@@ -196,7 +196,7 @@ TestCase subclass: #TransferTransactionTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:50:25'!
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:04:24'!
 test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
@@ -210,9 +210,6 @@ test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 	TransferTransaction register: 50 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
 	self assert: 50 * peso equals: accountWhoRecivesTheDeposit balance.
-	
-	
-	"transacciones solo positivas, con saldo (deny del balance mayor a 0) una transaccion debe ser de ams de 0 pesos para que tenga impacto"
 	
 ! !
 
@@ -231,6 +228,45 @@ test02TransferDecreasesSenderAccountBalanceOnTransferValue
 	
 	self assert: 50 * peso equals: accountWhoSendsTheDeposit balance.
 ! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 14:58:33'!
+test03TransferDepositValueMustBePositive
+
+	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit transferValue |
+	
+	accountWhoSendsTheDeposit := ReceptiveAccount new.
+	
+	accountWhoRecivesTheDeposit := ReceptiveAccount new.
+	
+	transferValue := 50 * peso.
+		
+	self assert: transferValue equals: (TransferTransaction register: transferValue on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit) value.! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:04:11'!
+test04TransferWithValueZeroDoesNotChangeTheReciverBalance
+
+	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
+	
+	accountWhoSendsTheDeposit := ReceptiveAccount new.
+	
+	accountWhoRecivesTheDeposit := ReceptiveAccount new.
+	
+	TransferTransaction register: 0 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
+	
+	self assert: 0 equals: ( accountWhoRecivesTheDeposit balance ).! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:03:49'!
+test05TransferWithValueZeroDoesNotChangeTheSenderBalance
+
+	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
+	
+	accountWhoSendsTheDeposit := ReceptiveAccount new.
+	
+	accountWhoRecivesTheDeposit := ReceptiveAccount new.
+	
+	TransferTransaction register: 0 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
+	
+	self assert: 0 equals: ( accountWhoSendsTheDeposit  balance ).! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -458,16 +494,11 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 12:54:51'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'Mirko Wu 12/6/2020 13:00:51'!
 balance
 	|balance|
 	balance := 0.
-	transactions do: [ :aTransaction | balance := aTransaction transactionValueOnBalanceWith: balance.
-		"(aTransaction isKindOf: Deposit) ifTrue: [ balance := balance + aTransaction value].
-		(aTransaction isKindOf: Withdraw) ifTrue: [balance := balance - aTransaction value].
-		(aTransaction isKindOf: TransferWithdraw) ifTrue: [balance := balance - aTransaction value].
-		(aTransaction isKindOf: TransferDeposit) ifTrue: [balance := balance + aTransaction value]."
-		].
+	transactions do: [ :aTransaction | balance := aTransaction transactionValueOnBalanceWith: balance.].
 	^balance! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'LL 9/20/2020 20:48:29'!
@@ -507,7 +538,7 @@ Object subclass: #TransferTransaction
 TransferTransaction class
 	instanceVariableNames: ''!
 
-!TransferTransaction class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:22:40'!
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'Mirko Wu 12/6/2020 14:56:51'!
 register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount 
 	
 	|deposit withdraw|
@@ -519,6 +550,8 @@ register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount
 	aSenderAccount register: withdraw.
 		
 	aReceptiveAccount register: deposit.
+	
+	^deposit
 	
 	
 ! !
