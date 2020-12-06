@@ -196,7 +196,7 @@ TestCase subclass: #TransferTransactionTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:29:35'!
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:50:25'!
 test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
@@ -210,6 +210,9 @@ test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 	TransferTransaction register: 50 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
 	self assert: 50 * peso equals: accountWhoRecivesTheDeposit balance.
+	
+	
+	"transacciones solo positivas, con saldo (deny del balance mayor a 0) una transaccion debe ser de ams de 0 pesos para que tenga impacto"
 	
 ! !
 
@@ -277,6 +280,12 @@ value
 
 	^ value! !
 
+
+!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:53:51'!
+transactionValueOnBalanceWith: aBalance
+
+	^aBalance + value.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Deposit class' category: 'ServiciosFinancieros-Ejercicio'!
@@ -306,6 +315,12 @@ initializeFor: aValue
 value
 
 	^ value! !
+
+
+!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:55:16'!
+transactionValueOnBalanceWith: aBalance
+
+	^aBalance - value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -443,15 +458,15 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 12:24:12'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 12:54:51'!
 balance
 	|balance|
 	balance := 0.
-	transactions do: [ :aTransaction | 
-		(aTransaction isKindOf: Deposit) ifTrue: [ balance := balance + aTransaction value].
+	transactions do: [ :aTransaction | balance := aTransaction transactionValueOnBalanceWith: balance.
+		"(aTransaction isKindOf: Deposit) ifTrue: [ balance := balance + aTransaction value].
 		(aTransaction isKindOf: Withdraw) ifTrue: [balance := balance - aTransaction value].
 		(aTransaction isKindOf: TransferWithdraw) ifTrue: [balance := balance - aTransaction value].
-		(aTransaction isKindOf: TransferDeposit) ifTrue: [balance := balance + aTransaction value].
+		(aTransaction isKindOf: TransferDeposit) ifTrue: [balance := balance + aTransaction value]."
 		].
 	^balance! !
 
@@ -526,6 +541,12 @@ value
 
 	^ value! !
 
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:54:28'!
+transactionValueOnBalanceWith: aBalance
+
+	^aBalance + value.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros-Ejercicio'!
@@ -549,6 +570,11 @@ TransferTransaction subclass: #TransferWithdraw
 initializeFor: aValue 
 	
 	value := aValue.! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:55:25'!
+transactionValueOnBalanceWith: aBalance
+
+	^aBalance - value.! !
 
 !TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:24:59'!
 value
