@@ -188,56 +188,46 @@ test06ReceptiveAccountDoNotKnowNotRegisteredTransactions
 	self deny: (account hasRegistered: withdraw).
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LF 12/4/2020 08:49:16'!
-test07
-
-	"| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
-	
-	accountWhoSendsTheDeposit := ReceptiveAccount new.
-	accountWhoRecivesTheDeposit := ReceptiveAccount new.
-	
-	Deposit register: 100*peso on: accountWhoSendsTheDeposit.
-	
-	Transfer registerFrom: accountWhoSendsTheDeposit to: accountWhoRecivesTheDeposit for: 50 * peso.
-	
-	self assert: 50 * peso equals: accountWhoSendsTheDeposit balance.
-	
-	self assert: 50 * peso equals: accountWhoRecivesTheDeposit balance."
-	
-	
-"
-	self deny: (account hasRegistered: deposit).
-	self deny: (account hasRegistered: withdraw)."
-! !
-
 
-!classDefinition: #TransferTest category: 'ServiciosFinancieros-Ejercicio'!
-TestCase subclass: #TransferTest
+!classDefinition: #TransferTransactionTest category: 'ServiciosFinancieros-Ejercicio'!
+TestCase subclass: #TransferTransactionTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferTest methodsFor: 'as yet unclassified' stamp: 'LF 12/4/2020 10:40:55'!
-test01
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:29:35'!
+test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 
-	"| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
+	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
 	
 	accountWhoSendsTheDeposit := ReceptiveAccount new.
+	
 	accountWhoRecivesTheDeposit := ReceptiveAccount new.
 	
 	Deposit register: 100*peso on: accountWhoSendsTheDeposit.
+		
+	TransferTransaction register: 50 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
-	Transfer registerFrom: accountWhoSendsTheDeposit to: accountWhoRecivesTheDeposit for: 50 * peso.
+	self assert: 50 * peso equals: accountWhoRecivesTheDeposit balance.
+	
+! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:29:22'!
+test02TransferDecreasesSenderAccountBalanceOnTransferValue
+
+	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
+	
+	accountWhoSendsTheDeposit := ReceptiveAccount new.
+	
+	accountWhoRecivesTheDeposit := ReceptiveAccount new.
+	
+	Deposit register: 100*peso on: accountWhoSendsTheDeposit.
+		
+	TransferTransaction register: 50 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
 	self assert: 50 * peso equals: accountWhoSendsTheDeposit balance.
-	
-	self assert: 50 * peso equals: accountWhoRecivesTheDeposit balance."
-	
-	
-"
-	self deny: (account hasRegistered: deposit).
-	self deny: (account hasRegistered: withdraw)."! !
+! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -267,21 +257,6 @@ register: aValue on: account
 	account register: transaction.
 		
 	^ transaction! !
-
-!AccountTransaction class methodsFor: 'instance creation' stamp: 'LF 12/3/2020 21:40:16'!
-registerFrom: aSenderAccount to: aReceptiveAccount for: anAmountOfMoney
-
-	|deposit withdraw|
-	
-	deposit := Deposit for: anAmountOfMoney.
-	
-	withdraw := Withdraw for: anAmountOfMoney.
-		
-	aReceptiveAccount register: deposit.
-	
-	aSenderAccount register: withdraw .
-
-	^{deposit, withdraw}! !
 
 
 !classDefinition: #Deposit category: 'ServiciosFinancieros-Ejercicio'!
@@ -468,13 +443,15 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/4/2020 08:48:51'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 12:24:12'!
 balance
 	|balance|
 	balance := 0.
 	transactions do: [ :aTransaction | 
 		(aTransaction isKindOf: Deposit) ifTrue: [ balance := balance + aTransaction value].
-		(aTransaction isKindOf: Withdraw) ifTrue: [balance := balance - aTransaction value] 
+		(aTransaction isKindOf: Withdraw) ifTrue: [balance := balance - aTransaction value].
+		(aTransaction isKindOf: TransferWithdraw) ifTrue: [balance := balance - aTransaction value].
+		(aTransaction isKindOf: TransferDeposit) ifTrue: [balance := balance + aTransaction value].
 		].
 	^balance! !
 
@@ -509,6 +486,57 @@ Object subclass: #TransferTransaction
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferTransaction class' category: 'ServiciosFinancieros-Ejercicio'!
+TransferTransaction class
+	instanceVariableNames: ''!
+
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:22:40'!
+register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount 
+	
+	|deposit withdraw|
+	
+	deposit := TransferDeposit for: anAmountOfMoney.
+	
+	withdraw := TransferWithdraw for: anAmountOfMoney.
+	
+	aSenderAccount register: withdraw.
+		
+	aReceptiveAccount register: deposit.
+	
+	
+! !
+
+
+!classDefinition: #TransferDeposit category: 'ServiciosFinancieros-Ejercicio'!
+TransferTransaction subclass: #TransferDeposit
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:16:04'!
+initializeFor: aValue 
+	
+	value := aValue.! !
+
+!TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:25:02'!
+value
+
+	^ value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros-Ejercicio'!
+TransferDeposit class
+	instanceVariableNames: ''!
+
+!TransferDeposit class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:15:31'!
+for: aValue 
+
+	^ self new initializeFor: aValue ! !
+
 
 !classDefinition: #TransferWithdraw category: 'ServiciosFinancieros-Ejercicio'!
 TransferTransaction subclass: #TransferWithdraw
@@ -516,3 +544,24 @@ TransferTransaction subclass: #TransferWithdraw
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:17:36'!
+initializeFor: aValue 
+	
+	value := aValue.! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:24:59'!
+value
+
+	^ value! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferWithdraw class' category: 'ServiciosFinancieros-Ejercicio'!
+TransferWithdraw class
+	instanceVariableNames: ''!
+
+!TransferWithdraw class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:17:09'!
+for: aValue 
+
+	^ self new initializeFor: aValue ! !
