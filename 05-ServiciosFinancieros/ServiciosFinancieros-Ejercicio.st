@@ -110,6 +110,161 @@ test06PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 			self assert: Portfolio canNotAddAccountErrorMessage equals: anError messageText.
 			self assert: portfolioToModify hasAccounts ]! !
 
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:33:09'!
+test07PortfolioWithZeroAccountsReturnsABalanceWithValueZero
+
+	| portfolioToAnalize|
+
+	portfolioToAnalize := Portfolio new.
+	
+	self assert: 0 * peso equals: portfolioToAnalize balance.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:38:14'!
+test08PortfolioWithOneAccountWithABalanceHasThatBalance
+
+	| portfolioToAnalize accountToAnalize|
+
+	accountToAnalize := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: accountToAnalize .
+	
+	portfolioToAnalize := Portfolio with: accountToAnalize.
+	
+	self assert: accountToAnalize balance equals: portfolioToAnalize balance.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:05:34'!
+test09PortfolioWithMoreThanOneAccountWithABalanceHasThatSummatoryOfTheirBalances
+
+	| portfolioToAnalize oneAccount anotherAccount|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: oneAccount .
+	Deposit register: 300 * peso on: anotherAccount .
+	
+	portfolioToAnalize := Portfolio with: oneAccount with: anotherAccount.
+	
+	self assert: 400 * peso equals: portfolioToAnalize balance.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:59:43'!
+test10PortfolioWithAccountsWithBalancesAndAnEmptyPortfolioBalanceIsEqualToPortfolioBalance
+
+	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: oneAccount .	
+	Deposit register: 300 * peso on: anotherAccount .
+	
+	portfolioToAnalize := Portfolio with: oneAccount with: anotherAccount.
+	
+	anotherPortfolio := Portfolio new.
+	
+	portfolioToAnalize add: anotherPortfolio.
+	
+	self assert: 400 * peso equals: portfolioToAnalize balance.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:03:36'!
+test11PortfolioWithAccountsWithBalancesAndAPortfolioWithAccountWithBalancesBalanceIIsEqualToPortfolioBalance
+
+	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	Deposit register: 100 * peso on: oneAccount .	
+	Deposit register: 300 * peso on: anotherAccount .
+	accountForAPorfolio := ReceptiveAccount new.
+	anotherAccountForAPortfolio := ReceptiveAccount new.
+	Deposit register: 200 * peso on: accountForAPorfolio .	
+	Deposit register: 50 * peso on: anotherAccountForAPortfolio .
+	
+	portfolioToAnalize := Portfolio with: oneAccount with: anotherAccount.
+	
+	anotherPortfolio := Portfolio with: accountForAPorfolio with: anotherAccountForAPortfolio.
+	
+	portfolioToAnalize add: anotherPortfolio.
+	
+	self assert: 650 * peso equals: portfolioToAnalize balance.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:51:04'!
+test12PortfolioWithAnAccountWithNoTransactionsHasZeroTransactions
+
+	| portfolioToAnalize oneAccount |
+
+	oneAccount := ReceptiveAccount new.
+
+	portfolioToAnalize := Portfolio with: oneAccount.
+	
+
+	self assert: 0 equals: portfolioToAnalize transactionsRegistered.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:50:42'!
+test13PortfolioWithAnAccountWithTransactionsHasItsNumberOfTransactions
+
+	| portfolioToAnalize oneAccount |
+
+	oneAccount := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: oneAccount.
+	Withdraw register: 50 * peso on: oneAccount.
+
+	portfolioToAnalize := Portfolio with: oneAccount.
+	
+	self assert: 2 equals: portfolioToAnalize transactionsRegistered.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:49:49'!
+test14PortfolioWithAPortfolioWithAccountsWithTransactionsHasItsNumberOfTransactions
+
+	| anotherPortfolio portfolioToAnalize oneAccount |
+
+	oneAccount := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: oneAccount.
+	Withdraw register: 50 * peso on: oneAccount.
+
+	anotherPortfolio := Portfolio with: oneAccount.
+	
+	portfolioToAnalize := Portfolio with: anotherPortfolio.	
+	
+	self assert: 2 equals: portfolioToAnalize transactionsRegistered.
+	
+	! !
+
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:53:34'!
+test15PortfolioWithAnAccountAndAPortfolioWithAccountsWithTransactionsHasItsNumberOfTransactions
+
+	| anotherPortfolio portfolioToAnalize oneAccount anotherAccount|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: oneAccount.
+	Deposit register: 50 * peso on: anotherAccount.
+
+	anotherPortfolio := Portfolio with: oneAccount.
+	
+	portfolioToAnalize := Portfolio with: anotherPortfolio.	
+	
+	portfolioToAnalize add: anotherAccount .
+	
+	self assert: 2 equals: portfolioToAnalize transactionsRegistered.
+	
+	! !
+
 
 !classDefinition: #ReceptiveAccountTest category: 'ServiciosFinancieros-Ejercicio'!
 TestCase subclass: #ReceptiveAccountTest
@@ -277,14 +432,14 @@ test06TransferDepositKnowsTheWithdrawValue
 	
 	self assert: 100 * peso equals: ( transferDeposit valueWithdrawned ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:19:22'!
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 15:24:20'!
 test07TransferWithdrawKnowsTheDepositValue
 
 	| transferWithdraw |
 	
 	transferWithdraw := TransferWithdraw for: 100 * peso.
 	
-	self assert: 100 * peso equals: ( transferWithdraw valueWithdrawned ).! !
+	self assert: 100 * peso equals: ( transferWithdraw valueDeposited ).! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -335,8 +490,8 @@ value
 	^ value! !
 
 
-!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:53:51'!
-transactionValueOnBalanceWith: aBalance
+!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
 
 	^aBalance + value.! !
 
@@ -371,8 +526,8 @@ value
 	^ value! !
 
 
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:55:16'!
-transactionValueOnBalanceWith: aBalance
+!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
 
 	^aBalance - value.! !
 
@@ -472,6 +627,31 @@ signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
 
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 15:51:21'!
+balance
+	
+	
+	| balance |
+	
+	balance := 0.
+	
+	accounts do: [:anAccount | balance:= balance + anAccount balance].
+	
+	^balance.
+! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:45:24'!
+transactionsRegistered
+	
+	|transactions|
+	
+	transactions := 0.
+	
+	accounts do: [:anAccount| transactions := transactions + anAccount transactionsRegistered].
+	
+	^transactions.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Portfolio class' category: 'ServiciosFinancieros-Ejercicio'!
@@ -512,11 +692,11 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'Mirko Wu 12/6/2020 13:00:51'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 16:56:08'!
 balance
 	|balance|
 	balance := 0.
-	transactions do: [ :aTransaction | balance := aTransaction transactionValueOnBalanceWith: balance.].
+	transactions do: [ :aTransaction | balance := aTransaction transactionValueWith: balance.].
 	^balance! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'LL 9/20/2020 20:48:29'!
@@ -529,6 +709,12 @@ hasRegistered: aTransaction
 register: aTransaction
 	
 	transactions add: aTransaction 
+! !
+
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 16:41:01'!
+transactionsRegistered
+
+	^transactions size.
 ! !
 
 
@@ -592,16 +778,21 @@ initializeFor: aValue
 	
 	value := aValue.! !
 
-!TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:25:02'!
+
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
+
+	^aBalance + value.! !
+
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 12:25:02'!
 value
 
 	^ value! !
 
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:54:28'!
-transactionValueOnBalanceWith: aBalance
-
-	^aBalance + value.! !
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 15:25:06'!
+valueWithdrawned
+	
+	^self value. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -622,20 +813,25 @@ TransferTransaction subclass: #TransferWithdraw
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:17:36'!
-initializeFor: aValue 
-	
-	value := aValue.! !
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:55:25'!
-transactionValueOnBalanceWith: aBalance
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
 
 	^aBalance - value.! !
 
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:24:59'!
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 12:24:59'!
 value
 
 	^ value! !
+
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 15:24:41'!
+valueDeposited
+	^value! !
+
+
+!TransferWithdraw methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:17:36'!
+initializeFor: aValue 
+	
+	value := aValue.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
