@@ -242,7 +242,7 @@ test03TransferDepositValueMustBePositive
 		
 	self assert: transferValue equals: (TransferTransaction register: transferValue on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit) value.! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:04:11'!
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:16:24'!
 test04TransferWithValueZeroDoesNotChangeTheReciverBalance
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
@@ -253,9 +253,9 @@ test04TransferWithValueZeroDoesNotChangeTheReciverBalance
 	
 	TransferTransaction register: 0 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
-	self assert: 0 equals: ( accountWhoRecivesTheDeposit balance ).! !
+	self assert: 0 * peso equals: ( accountWhoRecivesTheDeposit balance ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:03:49'!
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:16:32'!
 test05TransferWithValueZeroDoesNotChangeTheSenderBalance
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
@@ -266,7 +266,25 @@ test05TransferWithValueZeroDoesNotChangeTheSenderBalance
 	
 	TransferTransaction register: 0 * peso on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit.
 	
-	self assert: 0 equals: ( accountWhoSendsTheDeposit  balance ).! !
+	self assert: 0 * peso equals: ( accountWhoSendsTheDeposit  balance ).! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:18:57'!
+test06TransferDepositKnowsTheWithdrawValue
+
+	| transferDeposit |
+	
+	transferDeposit := TransferDeposit for: 100 * peso.
+	
+	self assert: 100 * peso equals: ( transferDeposit valueWithdrawned ).! !
+
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:19:22'!
+test07TransferWithdrawKnowsTheDepositValue
+
+	| transferWithdraw |
+	
+	transferWithdraw := TransferWithdraw for: 100 * peso.
+	
+	self assert: 100 * peso equals: ( transferWithdraw valueWithdrawned ).! !
 
 
 !classDefinition: #AccountTransaction category: 'ServiciosFinancieros-Ejercicio'!
@@ -532,13 +550,18 @@ Object subclass: #TransferTransaction
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
 
+!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:15:36'!
+valueWithdrawned
+	
+	^self value. ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TransferTransaction class' category: 'ServiciosFinancieros-Ejercicio'!
 TransferTransaction class
 	instanceVariableNames: ''!
 
-!TransferTransaction class methodsFor: 'instance creation' stamp: 'Mirko Wu 12/6/2020 14:56:51'!
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'Mirko Wu 12/6/2020 15:07:22'!
 register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount 
 	
 	|deposit withdraw|
