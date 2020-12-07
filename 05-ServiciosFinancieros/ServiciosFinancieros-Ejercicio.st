@@ -110,8 +110,8 @@ test06PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 			self assert: Portfolio canNotAddAccountErrorMessage equals: anError messageText.
 			self assert: portfolioToModify hasAccounts ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:33:09'!
-test07PortfolioWithZeroAccountsReturnsABalanceWithValueZero
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:15:29'!
+test07PortfolioWithZeroAccountsHasAZeroValueBalance
 
 	| portfolioToAnalize|
 
@@ -121,8 +121,8 @@ test07PortfolioWithZeroAccountsReturnsABalanceWithValueZero
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:38:14'!
-test08PortfolioWithOneAccountWithABalanceHasThatBalance
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:16:54'!
+test08PortfolioWithOneAccountHasTheBalanceValueOfTheAccount
 
 	| portfolioToAnalize accountToAnalize|
 
@@ -136,8 +136,8 @@ test08PortfolioWithOneAccountWithABalanceHasThatBalance
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:05:34'!
-test09PortfolioWithMoreThanOneAccountWithABalanceHasThatSummatoryOfTheirBalances
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:19:01'!
+test09PortfolioWithMoreThanOneAccountHasThatSummatoryOfTheirBalancesAsItsBalance
 
 	| portfolioToAnalize oneAccount anotherAccount|
 
@@ -152,8 +152,8 @@ test09PortfolioWithMoreThanOneAccountWithABalanceHasThatSummatoryOfTheirBalances
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 15:59:43'!
-test10PortfolioWithAccountsWithBalancesAndAnEmptyPortfolioBalanceIsEqualToPortfolioBalance
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:18:32'!
+test10PortfolioWithAccountsAndAnEmptyPortfolioBalanceIsTheSummatoryOfTheirBalances
 
 	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio|
 
@@ -172,17 +172,17 @@ test10PortfolioWithAccountsWithBalancesAndAnEmptyPortfolioBalanceIsEqualToPortfo
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:03:36'!
-test11PortfolioWithAccountsWithBalancesAndAPortfolioWithAccountWithBalancesBalanceIIsEqualToPortfolioBalance
+!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:21:53'!
+test11PortfolioWithAccountsAndAPortfolioWithAnAccountBalanceIIsTheSummatoryOfTheirBalances
 
 	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio|
 
 	oneAccount := ReceptiveAccount new.
 	anotherAccount := ReceptiveAccount new.
-	Deposit register: 100 * peso on: oneAccount .	
-	Deposit register: 300 * peso on: anotherAccount .
 	accountForAPorfolio := ReceptiveAccount new.
 	anotherAccountForAPortfolio := ReceptiveAccount new.
+	Deposit register: 100 * peso on: oneAccount .	
+	Deposit register: 300 * peso on: anotherAccount .
 	Deposit register: 200 * peso on: accountForAPorfolio .	
 	Deposit register: 50 * peso on: anotherAccountForAPortfolio .
 	
@@ -423,8 +423,8 @@ test05TransferWithValueZeroDoesNotChangeTheSenderBalance
 	
 	self assert: 0 * peso equals: ( accountWhoSendsTheDeposit  balance ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:18:57'!
-test06TransferDepositKnowsTheWithdrawValue
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/7/2020 13:25:01'!
+test06TransferDepositValueIsEqualToTheTransferWithdrawValue
 
 	| transferDeposit |
 	
@@ -432,8 +432,8 @@ test06TransferDepositKnowsTheWithdrawValue
 	
 	self assert: 100 * peso equals: ( transferDeposit valueWithdrawned ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 15:24:20'!
-test07TransferWithdrawKnowsTheDepositValue
+!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/7/2020 13:25:36'!
+test07TransferWithdrawValueIsEqualToTheTransferDepositValue
 
 	| transferWithdraw |
 	
@@ -484,16 +484,15 @@ initializeFor: aValue
 	value := aValue ! !
 
 
+!Deposit methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
+
+	^aBalance + value.! !
+
 !Deposit methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:38'!
 value
 
 	^ value! !
-
-
-!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:56:08'!
-transactionValueWith: aBalance
-
-	^aBalance + value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -520,16 +519,15 @@ initializeFor: aValue
 	value := aValue ! !
 
 
+!Withdraw methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
+
+	^aBalance - value.! !
+
 !Withdraw methodsFor: 'value' stamp: 'HernanWilkinson 7/13/2011 18:33'!
 value
 
 	^ value! !
-
-
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:56:08'!
-transactionValueWith: aBalance
-
-	^aBalance - value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -583,6 +581,30 @@ accountsSize
 	
 	^accounts size! !
 
+!Portfolio methodsFor: 'accessing' stamp: 'LF 12/6/2020 15:51:21'!
+balance
+	
+	
+	| balance |
+	
+	balance := 0.
+	
+	accounts do: [:anAccount | balance:= balance + anAccount balance].
+	
+	^balance.
+! !
+
+!Portfolio methodsFor: 'accessing' stamp: 'LF 12/6/2020 16:45:24'!
+transactionsRegistered
+	
+	|transactions|
+	
+	transactions := 0.
+	
+	accounts do: [:anAccount| transactions := transactions + anAccount transactionsRegistered].
+	
+	^transactions.! !
+
 
 !Portfolio methodsFor: 'composition - private' stamp: 'HAW 5/25/2019 12:17:31'!
 addRootParentsTo: rootParents
@@ -626,31 +648,6 @@ rootParents
 signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
-
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 15:51:21'!
-balance
-	
-	
-	| balance |
-	
-	balance := 0.
-	
-	accounts do: [:anAccount | balance:= balance + anAccount balance].
-	
-	^balance.
-! !
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 16:45:24'!
-transactionsRegistered
-	
-	|transactions|
-	
-	transactions := 0.
-	
-	accounts do: [:anAccount| transactions := transactions + anAccount transactionsRegistered].
-	
-	^transactions.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -735,11 +732,6 @@ Object subclass: #TransferTransaction
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros-Ejercicio'!
-
-!TransferTransaction methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:15:36'!
-valueWithdrawned
-	
-	^self value. ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
