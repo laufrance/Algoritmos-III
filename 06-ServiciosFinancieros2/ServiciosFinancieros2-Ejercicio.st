@@ -351,7 +351,7 @@ TestCase subclass: #ReportTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!ReportTest methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 21:13:17'!
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:53:20'!
 test01AccountSummaryIsEmptyWhenNoTransactionsWereMade
 
 	| accountToBeReported theReport |
@@ -362,12 +362,13 @@ test01AccountSummaryIsEmptyWhenNoTransactionsWereMade
 	
 	self assert: 1 equals: (theReport summary) size.
 	self assert: 0 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Balance = 0'.
 	
 	
 
 	! !
 
-!ReportTest methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 21:25:39'!
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:55:06'!
 test02AccountSummaryContainsADepositWhenADepositWasMade
 
 	| accountToBeReported theReport |
@@ -380,9 +381,10 @@ test02AccountSummaryContainsADepositWhenADepositWasMade
 	
 	self assert: 2 equals: (theReport summary) size.
 	self assert: 30 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Deposito por 30 pesos'.
 	! !
 
-!ReportTest methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 21:26:29'!
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:55:30'!
 test03AccountSummaryContainsAWithdrawWhenAWithdrawWasMade
 
 	| accountToBeReported theReport |
@@ -396,7 +398,47 @@ test03AccountSummaryContainsAWithdrawWhenAWithdrawWasMade
 	
 	self assert: 3 equals: (theReport summary) size.
 	self assert: 50 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Extraccion por 10 pesos'.
 	! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:57:02'!
+test04AccountSummaryContainsATransferWithdrawWhenATransferWithdrawWasMade
+
+	| accountToBeReported anotherAccount theReport |
+	
+	accountToBeReported := ReceptiveAccount new.
+	
+	anotherAccount := ReceptiveAccount new.
+	
+	Deposit register: 60 * peso on: accountToBeReported.
+	
+	TransferTransaction register: 60*peso on: accountToBeReported for: anotherAccount. 
+	
+	theReport := AccountSummary of: accountToBeReported.
+	
+	self assert: 3 equals: (theReport summary) size.
+	self assert: 0 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Salida por transferencia de 60 pesos'.
+	! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:57:21'!
+test05AccountSummaryContainsATransferDepositWhenATransferDepositWasMade
+
+	| accountToBeReported anotherAccount theReport |
+	
+	accountToBeReported := ReceptiveAccount new.
+	
+	anotherAccount := ReceptiveAccount new.
+	
+	Deposit register: 60 * peso on: anotherAccount.
+	
+	TransferTransaction register: 60*peso on: anotherAccount for: accountToBeReported. 
+	
+	theReport := AccountSummary of: accountToBeReported.
+	
+	self assert: 2 equals: (theReport summary) size.
+	self assert: 60 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Entrada por transferencia de 60 pesos'.! !
 
 
 !classDefinition: #TransferTransactionTest category: 'ServiciosFinancieros2-Ejercicio'!
@@ -549,6 +591,11 @@ value
 
 	^ value! !
 
+
+!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:40:06'!
+summaryName
+	^'Deposito por ', (value asString).! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Deposit class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -583,6 +630,12 @@ transactionValueWith: aBalance
 value
 
 	^ value! !
+
+
+!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:40:42'!
+summaryName
+	
+	^'Extraccion por ', (value asString).! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -786,6 +839,15 @@ transactions
 	^transactions.
 	! !
 
+
+!ReceptiveAccount methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:38:41'!
+summary
+	
+	|accountSummary|
+	accountSummary := OrderedCollection new.
+	transactions do: [:aTransaction | accountSummary add: aTransaction summaryName].
+	^accountSummary! !
+
 
 !classDefinition: #Report category: 'ServiciosFinancieros2-Ejercicio'!
 Object subclass: #Report
@@ -814,23 +876,14 @@ balance
 	
 	^account balance.! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 21:32:25'!
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:41:21'!
 summary
 	
-	summary add: 'Deposito por ', ((account transactions at: 1) value) asString.
-	summary add: 'Extraccion por ', ((account transactions at: 2)value) asString.
+	summary := account summary.
 	summary add: 'Balance = ', (self balance) asString.
 	
 	^summary.
-	
-	"
-	Cada tipo de transaccion contiene un metodo como nombre de la transaccion 
-	
-	do:[:aTransaction | aTransaction nombreDeLaTransaccion ]
-	
-	aplicar en portfolio en un futuro
-	
-	"! !
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -904,6 +957,12 @@ valueWithdrawned
 	
 	^self value. ! !
 
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:48:17'!
+summaryName
+	
+	^'Entrada por transferencia de ', (value asString).! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -942,6 +1001,12 @@ valueDeposited
 initializeFor: aValue 
 	
 	value := aValue.! !
+
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:46:26'!
+summaryName
+	
+	^'Salida por transferencia de ', (value asString).! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
