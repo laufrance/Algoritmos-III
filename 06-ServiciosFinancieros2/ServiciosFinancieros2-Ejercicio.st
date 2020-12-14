@@ -440,6 +440,134 @@ test05AccountSummaryContainsATransferDepositWhenATransferDepositWasMade
 	self assert: 60 * peso equals: (theReport balance).
 	self assert: (theReport summary) includes: 'Entrada por transferencia de 60 pesos'.! !
 
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 13:58:43'!
+test06AccountSummaryInAPortfolioContainsTheTransactionsThatWereMadeForEachAccount
+
+	| portfolioToBeReported oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio theReport|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	accountForAPorfolio := ReceptiveAccount new.
+	anotherAccountForAPortfolio := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: oneAccount .	
+	Deposit register: 300 * peso on: anotherAccount .
+	Deposit register: 200 * peso on: accountForAPorfolio .	
+	Deposit register: 50 * peso on: anotherAccountForAPortfolio .
+
+	portfolioToBeReported := Portfolio with: oneAccount with: anotherAccount.
+	
+	anotherPortfolio := Portfolio with: accountForAPorfolio with: anotherAccountForAPortfolio.
+	
+	portfolioToBeReported add: anotherPortfolio.
+	
+	theReport := AccountSummary of: portfolioToBeReported.
+	
+	self assert: 5 equals: (theReport summary) size.
+	self assert: 650 * peso equals: (theReport balance).
+	self assert: (theReport summary) includes: 'Balance = 650 pesos'.
+	self assert: (theReport summary) includes: 'Deposito por 50 pesos'.! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 14:08:30'!
+test07TransferNetIsZeroWhenNoTransfersWereMade
+
+	|theReport accountToBeReported|
+	
+	accountToBeReported := ReceptiveAccount new.
+	
+	theReport := TransferNet of: accountToBeReported.
+	
+	self assert: 0 * peso equals: theReport transferNet.
+! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 14:12:06'!
+test08TransferNetValueIncreasesWhenTransferDepositsWereMade
+
+	|theReport accountToBeReported anAccount|
+	
+	accountToBeReported := ReceptiveAccount new.
+
+	anAccount := ReceptiveAccount new.
+	
+	Deposit register: 100*peso on: anAccount.
+	
+	TransferTransaction register: 100*peso on: anAccount for: accountToBeReported.
+	
+	theReport := TransferNet of: accountToBeReported.
+	
+	self assert: 100 * peso equals: theReport transferNet.
+! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:07:40'!
+test09TransferNetValueDecreasesWhenTransferWithdrawsWereMade
+
+	|theReport accountToBeReported anAccount|
+	
+	accountToBeReported := ReceptiveAccount new.
+
+	anAccount := ReceptiveAccount new.
+	
+	Deposit register: 100*peso on: accountToBeReported.
+	
+	TransferTransaction register: 100*peso on: accountToBeReported for: anAccount.
+
+	theReport := TransferNet of: accountToBeReported.
+	
+	self assert: -100 * peso equals: theReport transferNet.
+! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:08:00'!
+test10TransferNetValueInAPortfolioIsTheSummatoryOfTheTransfersOfTheAccounts
+
+	| portfolioToBeReported oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio theReport|
+
+	oneAccount := ReceptiveAccount new.
+	anotherAccount := ReceptiveAccount new.
+	accountForAPorfolio := ReceptiveAccount new.
+	anotherAccountForAPortfolio := ReceptiveAccount new.
+	
+	Deposit register: 100 * peso on: oneAccount .	
+	Deposit register: 300 * peso on: anotherAccount .
+	Deposit register: 200 * peso on: accountForAPorfolio .	
+	Deposit register: 50 * peso on: anotherAccountForAPortfolio .
+	
+	TransferTransaction register: 50*peso on: anotherAccountForAPortfolio for: oneAccount.
+
+	portfolioToBeReported := Portfolio with: oneAccount with: anotherAccount.
+	
+	anotherPortfolio := Portfolio with: accountForAPorfolio with: anotherAccountForAPortfolio.
+	
+	portfolioToBeReported add: anotherPortfolio.
+	
+	
+	theReport := TransferNet of: portfolioToBeReported.
+	
+	self assert: 0 * peso equals: theReport transferNet.
+	
+! !
+
+!ReportTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:10:19'!
+test11TransferNetValueIsOnlyAffectedByTransferTransactions
+
+	|theReport accountToBeReported anAccount|
+	
+	accountToBeReported := ReceptiveAccount new.
+
+	anAccount := ReceptiveAccount new.
+	
+	Deposit register: 100*peso on: accountToBeReported.
+	
+	TransferTransaction register: 100*peso on: accountToBeReported for: anAccount.
+		
+	Deposit register: 100*peso on: accountToBeReported.
+	
+	theReport := TransferNet of: accountToBeReported.
+	
+	self assert: -100 * peso equals: theReport transferNet.
+	
+	"buscar la manera de sacar las llamadas a variables de transfer y summary de otras clases, que las hagan solo report"
+! !
+
 
 !classDefinition: #TransferTransactionTest category: 'ServiciosFinancieros2-Ejercicio'!
 TestCase subclass: #TransferTransactionTest
@@ -551,6 +679,11 @@ value
 
 	self subclassResponsibility ! !
 
+
+!AccountTransaction methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:08:28'!
+transactionNetValueWith: aBalance 
+	^aBalance.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'AccountTransaction class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -651,16 +784,19 @@ for: aValue
 
 !classDefinition: #Portfolio category: 'ServiciosFinancieros2-Ejercicio'!
 Object subclass: #Portfolio
-	instanceVariableNames: 'accounts parents'
+	instanceVariableNames: 'accounts parents summary transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!Portfolio methodsFor: 'initialization' stamp: 'HAW 5/25/2019 12:03:18'!
+!Portfolio methodsFor: 'initialization' stamp: 'LF 12/14/2020 14:47:53'!
 initialize
 
 	accounts := OrderedCollection new.
-	parents := OrderedCollection new.! !
+	parents := OrderedCollection new.
+	
+	summary := OrderedCollection new.
+	transactions := OrderedCollection new.! !
 
 
 !Portfolio methodsFor: 'accounts management' stamp: 'HAW 5/25/2019 12:19:20'!
@@ -702,16 +838,16 @@ balance
 	^balance.
 ! !
 
-!Portfolio methodsFor: 'accessing' stamp: 'LF 12/6/2020 16:45:24'!
+!Portfolio methodsFor: 'accessing' stamp: 'LF 12/14/2020 14:46:10'!
 transactionsRegistered
 	
-	|transactions|
+	|amountOfTransactions|
 	
-	transactions := 0.
+	amountOfTransactions := 0.
 	
-	accounts do: [:anAccount| transactions := transactions + anAccount transactionsRegistered].
+	accounts do: [:anAccount| amountOfTransactions := amountOfTransactions + anAccount transactionsRegistered].
 	
-	^transactions.! !
+	^amountOfTransactions.! !
 
 
 !Portfolio methodsFor: 'composition - private' stamp: 'HAW 5/25/2019 12:17:31'!
@@ -756,6 +892,19 @@ rootParents
 signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
+
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 13:57:48'!
+summary
+
+	accounts do: [:anAccount | summary addAll: anAccount summary].
+	^summary! !
+
+!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 14:47:06'!
+transactions
+	
+	accounts do: [:anAccount | transactions addAll: anAccount transactions].
+	^transactions! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -876,10 +1025,10 @@ balance
 	
 	^account balance.! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:41:21'!
+!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 13:56:00'!
 summary
 	
-	summary := account summary.
+	summary addAll: account summary.
 	summary add: 'Balance = ', (self balance) asString.
 	
 	^summary.
@@ -892,6 +1041,39 @@ AccountSummary class
 	instanceVariableNames: ''!
 
 !AccountSummary class methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 20:52:46'!
+of: anAccount 
+	
+	^self new initializeFor: anAccount.! !
+
+
+!classDefinition: #TransferNet category: 'ServiciosFinancieros2-Ejercicio'!
+Report subclass: #TransferNet
+	instanceVariableNames: 'account transferNet'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2-Ejercicio'!
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:08:50'!
+initializeFor: anAccount 
+	
+	account := anAccount.
+	transferNet := 0 * peso.! !
+
+!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:04:46'!
+transferNet
+
+	|accountTransactions |
+	accountTransactions := account transactions.
+	accountTransactions do: [:aTransaction | transferNet := aTransaction transactionNetValueWith: transferNet].
+	^transferNet! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferNet class' category: 'ServiciosFinancieros2-Ejercicio'!
+TransferNet class
+	instanceVariableNames: ''!
+
+!TransferNet class methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 14:04:25'!
 of: anAccount 
 	
 	^self new initializeFor: anAccount.! !
@@ -963,6 +1145,11 @@ summaryName
 	
 	^'Entrada por transferencia de ', (value asString).! !
 
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:05:23'!
+transactionNetValueWith: aBalance 
+	
+	^aBalance + value.! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -1007,6 +1194,10 @@ initializeFor: aValue
 summaryName
 	
 	^'Salida por transferencia de ', (value asString).! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:06:36'!
+transactionNetValueWith: aBalance 
+	^aBalance - value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
