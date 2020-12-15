@@ -5,8 +5,8 @@ TestCase subclass: #AccountSummaryTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:53:20'!
-test01AccountSummaryIsEmptyWhenNoTransactionsWereMade
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:27:54'!
+test01AccountSummaryIsEmptyWhenNoTransactionsAreMade
 
 	| accountToBeReported theReport |
 	
@@ -22,8 +22,8 @@ test01AccountSummaryIsEmptyWhenNoTransactionsWereMade
 
 	! !
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:55:06'!
-test02AccountSummaryContainsADepositWhenADepositWasMade
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:28:26'!
+test02AccountSummaryContainsADepositWhenADepositIsMade
 
 	| accountToBeReported theReport |
 	
@@ -38,8 +38,8 @@ test02AccountSummaryContainsADepositWhenADepositWasMade
 	self assert: (theReport summary) includes: 'Deposito por 30 pesos'.
 	! !
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:55:30'!
-test03AccountSummaryContainsAWithdrawWhenAWithdrawWasMade
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:28:36'!
+test03AccountSummaryContainsAWithdrawWhenAWithdrawIsMade
 
 	| accountToBeReported theReport |
 	
@@ -55,8 +55,8 @@ test03AccountSummaryContainsAWithdrawWhenAWithdrawWasMade
 	self assert: (theReport summary) includes: 'Extraccion por 10 pesos'.
 	! !
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:57:02'!
-test04AccountSummaryContainsATransferWithdrawWhenATransferWithdrawWasMade
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:28:46'!
+test04AccountSummaryContainsATransferWithdrawWhenATransferWithdrawIsMade
 
 	| accountToBeReported anotherAccount theReport |
 	
@@ -75,8 +75,8 @@ test04AccountSummaryContainsATransferWithdrawWhenATransferWithdrawWasMade
 	self assert: (theReport summary) includes: 'Salida por transferencia de 60 pesos'.
 	! !
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/11/2020 13:57:21'!
-test05AccountSummaryContainsATransferDepositWhenATransferDepositWasMade
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:28:56'!
+test05AccountSummaryContainsATransferDepositWhenATransferDepositIsMade
 
 	| accountToBeReported anotherAccount theReport |
 	
@@ -94,7 +94,7 @@ test05AccountSummaryContainsATransferDepositWhenATransferDepositWasMade
 	self assert: 60 * peso equals: (theReport balance).
 	self assert: (theReport summary) includes: 'Entrada por transferencia de 60 pesos'.! !
 
-!AccountSummaryTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 13:58:43'!
+!AccountSummaryTest methodsFor: 'testing' stamp: 'LF 12/14/2020 13:58:43'!
 test06AccountSummaryInAPortfolioContainsTheTransactionsThatWereMadeForEachAccount
 
 	| portfolioToBeReported oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio theReport|
@@ -130,7 +130,7 @@ TestCase subclass: #PortfolioTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:09:32'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:09:32'!
 test01PortfolioCanNotIncludeTheSameAccountMoreThanOnce
 
 	| account portfolio |
@@ -146,7 +146,7 @@ test01PortfolioCanNotIncludeTheSameAccountMoreThanOnce
 			self assert: 1 equals: portfolio accountsSize.
 			self assert: (portfolio hasAccount: account) ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:09:38'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:09:38'!
 test02PortfolioCanNotIncludeAccountOfItsPortfolios
 
 	| account simplePortfolio composedPortfolio |
@@ -163,7 +163,7 @@ test02PortfolioCanNotIncludeAccountOfItsPortfolios
 			self assert: 1 equals: composedPortfolio accountsSize.
 			self assert: (composedPortfolio hasAccount: simplePortfolio) ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:09:45'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:09:45'!
 test03PortfolioCanNotIncludeItself
 
 	| account simplePortfolio |
@@ -179,7 +179,7 @@ test03PortfolioCanNotIncludeItself
 			self assert: 1 equals: simplePortfolio accountsSize.
 			self assert: (simplePortfolio hasAccount: account) ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:09:51'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:09:51'!
 test04ComposedPortfolioCanNotHaveParentPortfolioAccount
 
 	| account simplePortfolio composedPortfolio |
@@ -196,7 +196,7 @@ test04ComposedPortfolioCanNotHaveParentPortfolioAccount
 			self assert: Portfolio canNotAddAccountErrorMessage equals: anError messageText.
 			self assert: simplePortfolio hasAccounts ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:09:57'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:09:57'!
 test05ComposedPortfolioCanNotHaveAccountOfAnyRootParentRecursively
 
 	| account leftParentPortfolio leftRootParentPortfolio portfolio rightParentPortfolio rightRootParentPortfolio |
@@ -218,7 +218,7 @@ test05ComposedPortfolioCanNotHaveAccountOfAnyRootParentRecursively
 			self assert: Portfolio canNotAddAccountErrorMessage equals: anError messageText.
 			self assert: portfolio hasAccounts ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:10:03'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:10:03'!
 test06PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 
 	| portfolioToAdd portfolioToModify rootPortfolio sharedAccount |
@@ -235,7 +235,7 @@ test06PortfolioCanNotIncludeAnyOfTheComposedAccountOfPortfolioToAdd
 			self assert: Portfolio canNotAddAccountErrorMessage equals: anError messageText.
 			self assert: portfolioToModify hasAccounts ]! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:15:29'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:15:29'!
 test07PortfolioWithZeroAccountsHasAZeroValueBalance
 
 	| portfolioToAnalize|
@@ -246,7 +246,7 @@ test07PortfolioWithZeroAccountsHasAZeroValueBalance
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:16:54'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:16:54'!
 test08PortfolioWithOneAccountHasTheBalanceValueOfTheAccount
 
 	| portfolioToAnalize accountToAnalize|
@@ -261,7 +261,7 @@ test08PortfolioWithOneAccountHasTheBalanceValueOfTheAccount
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:19:01'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:19:01'!
 test09PortfolioWithMoreThanOneAccountHasThatSummatoryOfTheirBalancesAsItsBalance
 
 	| portfolioToAnalize oneAccount anotherAccount|
@@ -277,7 +277,7 @@ test09PortfolioWithMoreThanOneAccountHasThatSummatoryOfTheirBalancesAsItsBalance
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:18:32'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:18:32'!
 test10PortfolioWithAccountsAndAnEmptyPortfolioBalanceIsTheSummatoryOfTheirBalances
 
 	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio|
@@ -297,7 +297,7 @@ test10PortfolioWithAccountsAndAnEmptyPortfolioBalanceIsTheSummatoryOfTheirBalanc
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/7/2020 13:21:53'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:21:53'!
 test11PortfolioWithAccountsAndAPortfolioWithAnAccountBalanceIIsTheSummatoryOfTheirBalances
 
 	| portfolioToAnalize oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio|
@@ -321,7 +321,7 @@ test11PortfolioWithAccountsAndAPortfolioWithAnAccountBalanceIIsTheSummatoryOfThe
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:51:04'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/6/2020 16:51:04'!
 test12PortfolioWithAnAccountWithNoTransactionsHasZeroTransactions
 
 	| portfolioToAnalize oneAccount |
@@ -335,7 +335,7 @@ test12PortfolioWithAnAccountWithNoTransactionsHasZeroTransactions
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:50:42'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/6/2020 16:50:42'!
 test13PortfolioWithAnAccountWithTransactionsHasItsNumberOfTransactions
 
 	| portfolioToAnalize oneAccount |
@@ -351,7 +351,7 @@ test13PortfolioWithAnAccountWithTransactionsHasItsNumberOfTransactions
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:49:49'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/6/2020 16:49:49'!
 test14PortfolioWithAPortfolioWithAccountsWithTransactionsHasItsNumberOfTransactions
 
 	| anotherPortfolio portfolioToAnalize oneAccount |
@@ -369,7 +369,7 @@ test14PortfolioWithAPortfolioWithAccountsWithTransactionsHasItsNumberOfTransacti
 	
 	! !
 
-!PortfolioTest methodsFor: 'tests' stamp: 'LF 12/6/2020 16:53:34'!
+!PortfolioTest methodsFor: 'testing' stamp: 'LF 12/6/2020 16:53:34'!
 test15PortfolioWithAnAccountAndAPortfolioWithAccountsWithTransactionsHasItsNumberOfTransactions
 
 	| anotherPortfolio portfolioToAnalize oneAccount anotherAccount|
@@ -398,7 +398,7 @@ TestCase subclass: #ReceptiveAccountTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 9/20/2020 17:01:58'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LL 9/20/2020 17:01:58'!
 test01ReceptiveAccountHaveZeroAsBalanceWhenCreated 
 
 	| account |
@@ -408,7 +408,7 @@ test01ReceptiveAccountHaveZeroAsBalanceWhenCreated
 	self assert: 0 equals: account balance
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 9/20/2020 20:55:33'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LL 9/20/2020 20:55:33'!
 test02DepositIncreasesBalanceOnTransactionValue 
 
 	| account |
@@ -419,7 +419,7 @@ test02DepositIncreasesBalanceOnTransactionValue
 	self assert: 100 * peso equals: account balance
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LF 12/4/2020 08:48:59'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LF 12/4/2020 08:48:59'!
 test03WithdrawDecreasesBalanceOnTransactionValue 
 
 	| account |
@@ -431,7 +431,7 @@ test03WithdrawDecreasesBalanceOnTransactionValue
 	self assert: 50 * peso equals: account balance
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 9/20/2020 20:55:54'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LL 9/20/2020 20:55:54'!
 test04WithdrawValueMustBePositive 
 
 	| account withdrawValue |
@@ -442,7 +442,7 @@ test04WithdrawValueMustBePositive
 	self assert: withdrawValue equals: (Withdraw register: withdrawValue on: account) value
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 9/20/2020 20:56:01'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LL 9/20/2020 20:56:01'!
 test05ReceptiveAccountKnowsRegisteredTransactions 
 
 	| account deposit withdraw |
@@ -455,7 +455,7 @@ test05ReceptiveAccountKnowsRegisteredTransactions
 	self assert: (account hasRegistered: withdraw).
 ! !
 
-!ReceptiveAccountTest methodsFor: 'tests' stamp: 'LL 9/20/2020 20:56:08'!
+!ReceptiveAccountTest methodsFor: 'testing' stamp: 'LL 9/20/2020 20:56:08'!
 test06ReceptiveAccountDoNotKnowNotRegisteredTransactions
 
 	| account deposit withdraw |
@@ -476,8 +476,8 @@ TestCase subclass: #TransferNetTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:00:52'!
-test01TransferNetIsZeroWhenNoTransfersWereMade
+!TransferNetTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:25:12'!
+test01TransferNetIsZeroWhenNoTransfersAreMade
 
 	|theReport accountToBeReported|
 	
@@ -488,8 +488,8 @@ test01TransferNetIsZeroWhenNoTransfersWereMade
 	self assert: 0 * peso equals: theReport transferNet.
 ! !
 
-!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:01:04'!
-test02TransferNetValueIncreasesWhenTransferDepositsWereMade
+!TransferNetTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:26:10'!
+test02TransferNetValueIncreasesWhenTransferDepositsAreMade
 
 	|theReport accountToBeReported anAccount|
 	
@@ -506,8 +506,8 @@ test02TransferNetValueIncreasesWhenTransferDepositsWereMade
 	self assert: 100 * peso equals: theReport transferNet.
 ! !
 
-!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:01:14'!
-test03TransferNetValueDecreasesWhenTransferWithdrawsWereMade
+!TransferNetTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:26:19'!
+test03TransferNetValueDecreasesWhenTransferWithdrawsAreMade
 
 	|theReport accountToBeReported anAccount|
 	
@@ -524,8 +524,8 @@ test03TransferNetValueDecreasesWhenTransferWithdrawsWereMade
 	self assert: -100 * peso equals: theReport transferNet.
 ! !
 
-!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:01:36'!
-test04TransferNetValueInAPortfolioIsTheSummatoryOfTheTransfersOfTheAccounts
+!TransferNetTest methodsFor: 'testing' stamp: 'LF 12/15/2020 14:26:49'!
+test04TransferNetValueInAPortfolioIsTheSummatoryOfTheAccountTransfers
 
 	| portfolioToBeReported oneAccount anotherAccount anotherPortfolio accountForAPorfolio anotherAccountForAPortfolio theReport|
 
@@ -554,7 +554,7 @@ test04TransferNetValueInAPortfolioIsTheSummatoryOfTheTransfersOfTheAccounts
 	
 ! !
 
-!TransferNetTest methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:01:57'!
+!TransferNetTest methodsFor: 'testing' stamp: 'LF 12/14/2020 21:01:57'!
 test05TransferNetValueIsOnlyAffectedByTransferTransactions
 
 	|theReport accountToBeReported anAccount|
@@ -583,7 +583,7 @@ TestCase subclass: #TransferTransactionTest
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:04:24'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'Mirko Wu 12/6/2020 15:04:24'!
 test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
@@ -600,7 +600,7 @@ test01TransferIncreasesReceptiveAccountBalanceOnTransferValue
 	
 ! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/6/2020 12:29:22'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'LF 12/6/2020 12:29:22'!
 test02TransferDecreasesSenderAccountBalanceOnTransferValue
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit  |
@@ -616,7 +616,7 @@ test02TransferDecreasesSenderAccountBalanceOnTransferValue
 	self assert: 50 * peso equals: accountWhoSendsTheDeposit balance.
 ! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 14:58:33'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'Mirko Wu 12/6/2020 14:58:33'!
 test03TransferDepositValueMustBePositive
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit transferValue |
@@ -629,7 +629,7 @@ test03TransferDepositValueMustBePositive
 		
 	self assert: transferValue equals: (TransferTransaction register: transferValue on: accountWhoSendsTheDeposit for: accountWhoRecivesTheDeposit) value.! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:16:24'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'Mirko Wu 12/6/2020 15:16:24'!
 test04TransferWithValueZeroDoesNotChangeTheReciverBalance
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
@@ -642,7 +642,7 @@ test04TransferWithValueZeroDoesNotChangeTheReciverBalance
 	
 	self assert: 0 * peso equals: ( accountWhoRecivesTheDeposit balance ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'Mirko Wu 12/6/2020 15:16:32'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'Mirko Wu 12/6/2020 15:16:32'!
 test05TransferWithValueZeroDoesNotChangeTheSenderBalance
 
 	| accountWhoSendsTheDeposit accountWhoRecivesTheDeposit |
@@ -655,7 +655,7 @@ test05TransferWithValueZeroDoesNotChangeTheSenderBalance
 	
 	self assert: 0 * peso equals: ( accountWhoSendsTheDeposit  balance ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/7/2020 13:25:01'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:25:01'!
 test06TransferDepositValueIsEqualToTheTransferWithdrawValue
 
 	| transferDeposit |
@@ -664,7 +664,7 @@ test06TransferDepositValueIsEqualToTheTransferWithdrawValue
 	
 	self assert: 100 * peso equals: ( transferDeposit valueWithdrawned ).! !
 
-!TransferTransactionTest methodsFor: 'as yet unclassified' stamp: 'LF 12/7/2020 13:25:36'!
+!TransferTransactionTest methodsFor: 'testing' stamp: 'LF 12/7/2020 13:25:36'!
 test07TransferWithdrawValueIsEqualToTheTransferDepositValue
 
 	| transferWithdraw |
@@ -686,6 +686,11 @@ value
 
 	self subclassResponsibility ! !
 
+
+!AccountTransaction methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:20:44'!
+forwardTo: objectInChargeOfPerforming
+	
+	self subclassResponsibility .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -728,15 +733,10 @@ value
 	^ value! !
 
 
-!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:54:28'!
-summaryName: theReport 
+!Deposit methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:23:24'!
+forwardTo: objectInChargeOfPerforming 
 	
-	^theReport accountSummaryNameForDeposit: self.! !
-
-!Deposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:48:25'!
-transferNet: theReport 
-	
-	^theReport transferNetValueForADeposit: self.! !
+	^objectInChargeOfPerforming accomplishForDeposit: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -756,6 +756,11 @@ AccountTransaction subclass: #TransferTransaction
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
+
+!TransferTransaction methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:20:44'!
+forwardTo: objectInChargeOfPerforming
+	
+	self subclassResponsibility .! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -789,6 +794,12 @@ TransferTransaction subclass: #TransferDeposit
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
+!TransferDeposit methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:23:54'!
+forwardTo: objectInChargeOfPerforming 
+	
+	^objectInChargeOfPerforming accomplishForTransferDeposit: self.! !
+
+
 !TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:16:04'!
 initializeFor: aValue 
 	
@@ -810,17 +821,6 @@ valueWithdrawned
 	
 	^self value. ! !
 
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:01:26'!
-summaryName: theReport 
-	
-	^theReport accountSummaryNameForTransferDeposit: self.! !
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:47:27'!
-transferNet: theReport 
-	
-	^theReport transferNetValueForATransferDeposit: self.! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -840,6 +840,18 @@ TransferTransaction subclass: #TransferWithdraw
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
+!TransferWithdraw methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:24:07'!
+forwardTo: objectInChargeOfPerforming 
+	
+	^objectInChargeOfPerforming accomplishForTransferWithdraw: self.! !
+
+
+!TransferWithdraw methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:17:36'!
+initializeFor: aValue 
+	
+	value := aValue.! !
+
+
 !TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
 transactionValueWith: aBalance
 
@@ -853,23 +865,6 @@ value
 !TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 15:24:41'!
 valueDeposited
 	^value! !
-
-
-!TransferWithdraw methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:17:36'!
-initializeFor: aValue 
-	
-	value := aValue.! !
-
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:59:07'!
-summaryName: theReport 
-	
-	^theReport accountSummaryNameForTransferWithdraw: self. ! !
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:51:09'!
-transferNet: theReport 
-	
-	^theReport transferNetValueForATransferWithdraw: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -907,15 +902,10 @@ value
 	^ value! !
 
 
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 21:03:41'!
-summaryName: theReport 
-
-	^theReport accountSummaryNameForWithdraw: self.! !
-
-!Withdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:58:32'!
-transferNet: theReport 
+!Withdraw methodsFor: 'accessing' stamp: 'LF 12/15/2020 14:24:33'!
+forwardTo: objectInChargeOfPerforming 
 	
-	^theReport transferNetValueForAWithdraw: self.! !
+	^objectInChargeOfPerforming accomplishForWithdraw: self.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -991,6 +981,12 @@ balance
 	^balance.
 ! !
 
+!Portfolio methodsFor: 'accessing' stamp: 'LF 12/14/2020 14:47:06'!
+transactions
+	
+	accounts do: [:anAccount | transactions addAll: anAccount transactions].
+	^transactions! !
+
 !Portfolio methodsFor: 'accessing' stamp: 'LF 12/14/2020 14:46:10'!
 transactionsRegistered
 	
@@ -1046,13 +1042,6 @@ signalCanNotAddAccount
 	
 	self error: self class canNotAddAccountErrorMessage! !
 
-
-!Portfolio methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 14:47:06'!
-transactions
-	
-	accounts do: [:anAccount | transactions addAll: anAccount transactions].
-	^transactions! !
-
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Portfolio class' category: 'ServiciosFinancieros2-Ejercicio'!
@@ -1093,12 +1082,14 @@ initialize
 	transactions := OrderedCollection new.! !
 
 
-!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/6/2020 16:56:08'!
+!ReceptiveAccount methodsFor: 'main protocol' stamp: 'LF 12/15/2020 14:20:44'!
 balance
+
 	|balance|
 	balance := 0.
-	transactions do: [ :aTransaction | balance := aTransaction transactionValueWith: balance.].
-	^balance! !
+	transactions do: [ :aTransaction | balance := balance + (aTransaction forwardTo: self).].
+	^balance
+! !
 
 !ReceptiveAccount methodsFor: 'main protocol' stamp: 'LL 9/20/2020 20:48:29'!
 hasRegistered: aTransaction
@@ -1119,6 +1110,13 @@ transactionsRegistered
 ! !
 
 
+!ReceptiveAccount methodsFor: 'accessing' stamp: 'MW 12/10/2020 21:20:56'!
+transactions
+	
+	^transactions.
+	! !
+
+
 !ReceptiveAccount methodsFor: 'composition - private' stamp: 'HAW 5/25/2019 12:03:32'!
 addedTo: aPortfolio 
 	
@@ -1129,12 +1127,26 @@ isComposedBy: anAccount
 
 	^self = anAccount ! !
 
-!ReceptiveAccount methodsFor: 'composition - private' stamp: 'MW 12/10/2020 21:20:56'!
-transactions
-	
-	^transactions.
-	! !
 
+!ReceptiveAccount methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:24'!
+accomplishForDeposit: theTransaction
+
+	^theTransaction value! !
+
+!ReceptiveAccount methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:54'!
+accomplishForTransferDeposit: theTransaction
+
+	^theTransaction value! !
+
+!ReceptiveAccount methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:07'!
+accomplishForTransferWithdraw: theTransaction
+
+	^(theTransaction value)*-1! !
+
+!ReceptiveAccount methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:33'!
+accomplishForWithdraw: theTransaction
+
+	^(theTransaction value)*-1! !
 
 
 !classDefinition: #Report category: 'ServiciosFinancieros2-Ejercicio'!
@@ -1143,6 +1155,26 @@ Object subclass: #Report
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
+
+!Report methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:30:45'!
+accomplishForDeposit: aDeposit 
+	
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:30:55'!
+accomplishForTransferDeposit: aTransferDeposit 
+	
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:31:05'!
+accomplishForTransferWithdraw: aTransferWithdraw 
+	
+	self subclassResponsibility .! !
+
+!Report methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:31:12'!
+accomplishForWithdraw: aWithdraw 
+	
+	self subclassResponsibility .! !
 
 
 !classDefinition: #AccountSummary category: 'ServiciosFinancieros2-Ejercicio'!
@@ -1159,40 +1191,41 @@ initializeFor: anAccount
 	summary := OrderedCollection new.! !
 
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:55:50'!
-accountSummaryNameForDeposit: aDeposit 
-	
-	^'Deposito por ', (aDeposit value asString).! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:02:07'!
-accountSummaryNameForTransferDeposit: aTransferDeposit 
-	
-	^'Entrada por transferencia de ', (aTransferDeposit value asString).! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:59:48'!
-accountSummaryNameForTransferWithdraw: aTransferWithdraw 
-	
-	^'Salida por transferencia de ', (aTransferWithdraw value asString).! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:57:47'!
-accountSummaryNameForWithdraw: aWithdraw 
-	
-	^'Extraccion por ', (aWithdraw value asString).! !
-
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'MW 12/10/2020 21:11:51'!
+!AccountSummary methodsFor: 'value' stamp: 'LF 12/15/2020 13:55:44'!
 balance
 	
 	^account balance.! !
 
-!AccountSummary methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:45:52'!
+!AccountSummary methodsFor: 'value' stamp: 'LF 12/15/2020 14:20:44'!
 summary
 	
-	account transactions do: [:aTransaction| summary add: (aTransaction summaryName: self)].
+	account transactions do: [:aTransaction| summary add: (aTransaction forwardTo: self)].
 	
 	summary add: 'Balance = ', (self balance) asString.
 	
 	^summary.
 	! !
+
+
+!AccountSummary methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:24'!
+accomplishForDeposit: aDeposit 
+	
+	^'Deposito por ', (aDeposit value asString).! !
+
+!AccountSummary methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:54'!
+accomplishForTransferDeposit: aTransferDeposit 
+	
+	^'Entrada por transferencia de ', (aTransferDeposit value asString).! !
+
+!AccountSummary methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:07'!
+accomplishForTransferWithdraw: aTransferWithdraw 
+	
+	^'Salida por transferencia de ', (aTransferWithdraw value asString).! !
+
+!AccountSummary methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:33'!
+accomplishForWithdraw: aWithdraw 
+	
+	^'Extraccion por ', (aWithdraw value asString).! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1213,37 +1246,39 @@ Report subclass: #TransferNet
 	poolDictionaries: ''
 	category: 'ServiciosFinancieros2-Ejercicio'!
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 15:08:50'!
+!TransferNet methodsFor: 'initialization' stamp: 'LF 12/14/2020 15:08:50'!
 initializeFor: anAccount 
 	
 	account := anAccount.
 	transferNet := 0 * peso.! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:46:46'!
+
+!TransferNet methodsFor: 'value' stamp: 'LF 12/15/2020 14:20:44'!
 transferNet
 
-	account transactions do: [:aTransaction| transferNet := aTransaction transferNet: self.].
+	account transactions do: [:aTransaction| transferNet := aTransaction forwardTo: self.].
 	
 	^transferNet! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:48:45'!
-transferNetValueForADeposit: aDeposit 
+
+!TransferNet methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:24'!
+accomplishForDeposit: aDeposit 
 	
 	^transferNet.
 	! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:47:49'!
-transferNetValueForATransferDeposit: aTransferDeposit 
+!TransferNet methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:23:54'!
+accomplishForTransferDeposit: aTransferDeposit 
 	
 	^aTransferDeposit value + transferNet .! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:51:48'!
-transferNetValueForATransferWithdraw: aTransferWithdraw 
+!TransferNet methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:07'!
+accomplishForTransferWithdraw: aTransferWithdraw 
 	
 	^transferNet - aTransferWithdraw value! !
 
-!TransferNet methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:58:51'!
-transferNetValueForAWithdraw: aWithdraw
+!TransferNet methodsFor: 'excecuting' stamp: 'LF 12/15/2020 14:24:33'!
+accomplishForWithdraw: aWithdraw
 	
 	^transferNet.
 	! !
