@@ -750,6 +750,139 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
+!classDefinition: #TransferTransaction category: 'ServiciosFinancieros2-Ejercicio'!
+AccountTransaction subclass: #TransferTransaction
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2-Ejercicio'!
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferTransaction class' category: 'ServiciosFinancieros2-Ejercicio'!
+TransferTransaction class
+	instanceVariableNames: ''!
+
+!TransferTransaction class methodsFor: 'instance creation' stamp: 'Mirko Wu 12/6/2020 15:07:22'!
+register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount 
+	
+	|deposit withdraw|
+	
+	deposit := TransferDeposit for: anAmountOfMoney.
+	
+	withdraw := TransferWithdraw for: anAmountOfMoney.
+	
+	aSenderAccount register: withdraw.
+		
+	aReceptiveAccount register: deposit.
+	
+	^deposit
+	
+	
+! !
+
+
+!classDefinition: #TransferDeposit category: 'ServiciosFinancieros2-Ejercicio'!
+TransferTransaction subclass: #TransferDeposit
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2-Ejercicio'!
+
+!TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:16:04'!
+initializeFor: aValue 
+	
+	value := aValue.! !
+
+
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
+
+	^aBalance + value.! !
+
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 12:25:02'!
+value
+
+	^ value! !
+
+!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 15:25:06'!
+valueWithdrawned
+	
+	^self value. ! !
+
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:01:26'!
+summaryName: theReport 
+	
+	^theReport accountSummaryNameForTransferDeposit: self.! !
+
+!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:47:27'!
+transferNet: theReport 
+	
+	^theReport transferNetValueForATransferDeposit: self.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros2-Ejercicio'!
+TransferDeposit class
+	instanceVariableNames: ''!
+
+!TransferDeposit class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:15:31'!
+for: aValue 
+
+	^ self new initializeFor: aValue ! !
+
+
+!classDefinition: #TransferWithdraw category: 'ServiciosFinancieros2-Ejercicio'!
+TransferTransaction subclass: #TransferWithdraw
+	instanceVariableNames: 'value'
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2-Ejercicio'!
+
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
+transactionValueWith: aBalance
+
+	^aBalance - value.! !
+
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 12:24:59'!
+value
+
+	^ value! !
+
+!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 15:24:41'!
+valueDeposited
+	^value! !
+
+
+!TransferWithdraw methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:17:36'!
+initializeFor: aValue 
+	
+	value := aValue.! !
+
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:59:07'!
+summaryName: theReport 
+	
+	^theReport accountSummaryNameForTransferWithdraw: self. ! !
+
+!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:51:09'!
+transferNet: theReport 
+	
+	^theReport transferNetValueForATransferWithdraw: self.! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+!classDefinition: 'TransferWithdraw class' category: 'ServiciosFinancieros2-Ejercicio'!
+TransferWithdraw class
+	instanceVariableNames: ''!
+
+!TransferWithdraw class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:17:09'!
+for: aValue 
+
+	^ self new initializeFor: aValue ! !
+
+
 !classDefinition: #Withdraw category: 'ServiciosFinancieros2-Ejercicio'!
 AccountTransaction subclass: #Withdraw
 	instanceVariableNames: 'value'
@@ -796,8 +929,16 @@ for: aValue
 	^ self new initializeFor: aValue ! !
 
 
+!classDefinition: #BankHierarchySystem category: 'ServiciosFinancieros2-Ejercicio'!
+Object subclass: #BankHierarchySystem
+	instanceVariableNames: ''
+	classVariableNames: ''
+	poolDictionaries: ''
+	category: 'ServiciosFinancieros2-Ejercicio'!
+
+
 !classDefinition: #Portfolio category: 'ServiciosFinancieros2-Ejercicio'!
-Object subclass: #Portfolio
+BankHierarchySystem subclass: #Portfolio
 	instanceVariableNames: 'accounts parents transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -940,7 +1081,7 @@ with: anAccount with: anotherAccount
 
 
 !classDefinition: #ReceptiveAccount category: 'ServiciosFinancieros2-Ejercicio'!
-Object subclass: #ReceptiveAccount
+BankHierarchySystem subclass: #ReceptiveAccount
 	instanceVariableNames: 'transactions'
 	classVariableNames: ''
 	poolDictionaries: ''
@@ -1117,136 +1258,3 @@ TransferNet class
 of: anAccount 
 	
 	^self new initializeFor: anAccount.! !
-
-
-!classDefinition: #TransferTransaction category: 'ServiciosFinancieros2-Ejercicio'!
-Object subclass: #TransferTransaction
-	instanceVariableNames: ''
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros2-Ejercicio'!
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferTransaction class' category: 'ServiciosFinancieros2-Ejercicio'!
-TransferTransaction class
-	instanceVariableNames: ''!
-
-!TransferTransaction class methodsFor: 'instance creation' stamp: 'Mirko Wu 12/6/2020 15:07:22'!
-register: anAmountOfMoney on: aSenderAccount for: aReceptiveAccount 
-	
-	|deposit withdraw|
-	
-	deposit := TransferDeposit for: anAmountOfMoney.
-	
-	withdraw := TransferWithdraw for: anAmountOfMoney.
-	
-	aSenderAccount register: withdraw.
-		
-	aReceptiveAccount register: deposit.
-	
-	^deposit
-	
-	
-! !
-
-
-!classDefinition: #TransferDeposit category: 'ServiciosFinancieros2-Ejercicio'!
-TransferTransaction subclass: #TransferDeposit
-	instanceVariableNames: 'value'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros2-Ejercicio'!
-
-!TransferDeposit methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:16:04'!
-initializeFor: aValue 
-	
-	value := aValue.! !
-
-
-!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
-transactionValueWith: aBalance
-
-	^aBalance + value.! !
-
-!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 12:25:02'!
-value
-
-	^ value! !
-
-!TransferDeposit methodsFor: 'value' stamp: 'LF 12/6/2020 15:25:06'!
-valueWithdrawned
-	
-	^self value. ! !
-
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:01:26'!
-summaryName: theReport 
-	
-	^theReport accountSummaryNameForTransferDeposit: self.! !
-
-!TransferDeposit methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:47:27'!
-transferNet: theReport 
-	
-	^theReport transferNetValueForATransferDeposit: self.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferDeposit class' category: 'ServiciosFinancieros2-Ejercicio'!
-TransferDeposit class
-	instanceVariableNames: ''!
-
-!TransferDeposit class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:15:31'!
-for: aValue 
-
-	^ self new initializeFor: aValue ! !
-
-
-!classDefinition: #TransferWithdraw category: 'ServiciosFinancieros2-Ejercicio'!
-TransferTransaction subclass: #TransferWithdraw
-	instanceVariableNames: 'value'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'ServiciosFinancieros2-Ejercicio'!
-
-!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 16:56:08'!
-transactionValueWith: aBalance
-
-	^aBalance - value.! !
-
-!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 12:24:59'!
-value
-
-	^ value! !
-
-!TransferWithdraw methodsFor: 'value' stamp: 'LF 12/6/2020 15:24:41'!
-valueDeposited
-	^value! !
-
-
-!TransferWithdraw methodsFor: 'initialization' stamp: 'LF 12/6/2020 12:17:36'!
-initializeFor: aValue 
-	
-	value := aValue.! !
-
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 19:59:07'!
-summaryName: theReport 
-	
-	^theReport accountSummaryNameForTransferWithdraw: self. ! !
-
-!TransferWithdraw methodsFor: 'as yet unclassified' stamp: 'LF 12/14/2020 20:51:09'!
-transferNet: theReport 
-	
-	^theReport transferNetValueForATransferWithdraw: self.! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'TransferWithdraw class' category: 'ServiciosFinancieros2-Ejercicio'!
-TransferWithdraw class
-	instanceVariableNames: ''!
-
-!TransferWithdraw class methodsFor: 'instance creation' stamp: 'LF 12/6/2020 12:17:09'!
-for: aValue 
-
-	^ self new initializeFor: aValue ! !
