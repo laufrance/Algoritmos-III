@@ -14,13 +14,12 @@ test01CartIsEmpty
 
 	self assert: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:22'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:56:38'!
 test02AddingABookToCartMakesItNotEmpty
 
-	|shoppingSystem theCart aBook |
+	| shoppingSystem theCart aBook |
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
 	theCart := Cart initialize.
 	
 	aBook := '1234567890'.
@@ -29,21 +28,18 @@ test02AddingABookToCartMakesItNotEmpty
 
 	self deny: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:52'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:56:25'!
 test03AddingMultipleBooksToCartMakesItsContentIncreases
 
 	| theCart aBook anotherBook shoppingSystem|
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
 	theCart := Cart initialize.
 	
 	aBook := '1234567890'.
-	
 	anotherBook := '1234567890'.
 	
 	shoppingSystem add: aBook toCart: theCart.
-	
 	shoppingSystem add: anotherBook toCart: theCart.
 	
 	self assert: (theCart content size isEqualTo: 2). ! !
@@ -61,13 +57,12 @@ test04AddingABookToANotExistingCartWillCreateIt
 	
 	self assert: (theCart content size isEqualTo: 1). ! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:04'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:56:33'!
 test05AddingAnInvalidBookWontBeAddedToCart
 	
 	|shoppingSystem theCart aBook |
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
 	theCart := Cart initialize.
 	
 	aBook := 'isbnInvalido'.
@@ -76,13 +71,12 @@ test05AddingAnInvalidBookWontBeAddedToCart
 
 	self assert: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:32'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:56:52'!
 test06ASpecificBookCanBeIdentifiedInTheCart
 
-	| theCart aBook shoppingSystem|
+	| theCart aBook shoppingSystem |
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
 	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
@@ -91,13 +85,12 @@ test06ASpecificBookCanBeIdentifiedInTheCart
 	
 	self assert: ( theCart hasSpecificBook: '1234567890' ).! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:14'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:57:18'!
 test07TheCartIsValidBefore30MinutesOfInactivity
 
-	| theCart aBook shoppingSystem|
+	| theCart aBook shoppingSystem |
 	
-	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
+	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'. 
 	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
@@ -106,13 +99,12 @@ test07TheCartIsValidBefore30MinutesOfInactivity
 	
 	self assert: ( shoppingSystem theCart: theCart isValidIn: Time now ).! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:29:31'!
+!CartTest methodsFor: 'testing' stamp: 'MW 2/11/2021 11:57:15'!
 test08TheCartIsInvalidAfter30MinutesOfInactivity
 
-	| theCart aBook theTimeAfter35Minutes shoppingSystem|
+	| theCart aBook theTimeAfter35Minutes shoppingSystem |
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
-	
 	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
@@ -142,7 +134,7 @@ add: aBook toCart: theCart
 	
 	theCart setLastActivityTime.! !
 
-!TusLibrosSystem methodsFor: 'main protocol' stamp: 'LF 2/11/2021 10:31:50'!
+!TusLibrosSystem methodsFor: 'main protocol' stamp: 'MW 2/11/2021 11:53:25'!
 addToNewCart: aBook
 	
 	| theCart |
@@ -152,8 +144,6 @@ addToNewCart: aBook
 	theCart := Cart initialize.
 	
 	self add: aBook toCart: theCart.
-	
-	theCart setLastActivityTime.
 	
 	^theCart.! !
 
