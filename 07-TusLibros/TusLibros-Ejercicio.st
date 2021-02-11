@@ -14,7 +14,7 @@ test01CartIsEmpty
 
 	self assert: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:11:28'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:22'!
 test02AddingABookToCartMakesItNotEmpty
 
 	|shoppingSystem theCart aBook |
@@ -23,13 +23,13 @@ test02AddingABookToCartMakesItNotEmpty
 	
 	theCart := Cart initialize.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
 	shoppingSystem add: aBook toCart: theCart.
 
 	self deny: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:11:44'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:52'!
 test03AddingMultipleBooksToCartMakesItsContentIncreases
 
 	| theCart aBook anotherBook shoppingSystem|
@@ -38,9 +38,9 @@ test03AddingMultipleBooksToCartMakesItsContentIncreases
 	
 	theCart := Cart initialize.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
-	anotherBook := Book withIsbn: '1234567890'.
+	anotherBook := '1234567890'.
 	
 	shoppingSystem add: aBook toCart: theCart.
 	
@@ -48,20 +48,20 @@ test03AddingMultipleBooksToCartMakesItsContentIncreases
 	
 	self assert: (theCart content size isEqualTo: 2). ! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:11:53'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:29:53'!
 test04AddingABookToANotExistingCartWillCreateIt
 
 	| theCart aBook shoppingSystem|
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
 	theCart := shoppingSystem addToNewCart: aBook.
 	
 	self assert: (theCart content size isEqualTo: 1). ! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:12:03'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:04'!
 test05AddingAnInvalidBookWontBeAddedToCart
 	
 	|shoppingSystem theCart aBook |
@@ -70,20 +70,20 @@ test05AddingAnInvalidBookWontBeAddedToCart
 	
 	theCart := Cart initialize.
 	
-	aBook := Book withIsbn: 'isbnInvalido'.
+	aBook := 'isbnInvalido'.
 	
 	shoppingSystem add: aBook toCart: theCart.
 
 	self assert: theCart isEmpty.! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:12:14'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:32'!
 test06ASpecificBookCanBeIdentifiedInTheCart
 
 	| theCart aBook shoppingSystem|
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
 	
@@ -91,14 +91,14 @@ test06ASpecificBookCanBeIdentifiedInTheCart
 	
 	self assert: ( theCart hasSpecificBook: '1234567890' ).! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:12:22'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:30:14'!
 test07TheCartIsValidBefore30MinutesOfInactivity
 
 	| theCart aBook shoppingSystem|
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
 	
@@ -106,14 +106,14 @@ test07TheCartIsValidBefore30MinutesOfInactivity
 	
 	self assert: ( shoppingSystem theCart: theCart isValidIn: Time now ).! !
 
-!CartTest methodsFor: 'testing' stamp: 'LF 2/10/2021 16:12:35'!
+!CartTest methodsFor: 'testing' stamp: 'LF 2/11/2021 10:29:31'!
 test08TheCartIsInvalidAfter30MinutesOfInactivity
 
 	| theCart aBook theTimeAfter35Minutes shoppingSystem|
 	
 	shoppingSystem := TusLibrosSystem initializeWith: '1234567890'.
 	
-	aBook := Book withIsbn: '1234567890'.
+	aBook := '1234567890'.
 	
 	theCart := Cart initialize.
 	
@@ -133,21 +133,21 @@ Object subclass: #TusLibrosSystem
 	poolDictionaries: ''
 	category: 'TusLibros-Ejercicio'!
 
-!TusLibrosSystem methodsFor: 'main protocol' stamp: 'LF 2/10/2021 15:43:03'!
+!TusLibrosSystem methodsFor: 'main protocol' stamp: 'LF 2/11/2021 10:31:28'!
 add: aBook toCart: theCart 
 
-	isbnLibrary detect:[:isbnBook | isbnBook = aBook isbn] ifNone:[^nil].
+	isbnLibrary detect:[:isbnBook | isbnBook = aBook] ifNone:[^nil].
 	
 	(theCart content) add: aBook.	
 	
 	theCart setLastActivityTime.! !
 
-!TusLibrosSystem methodsFor: 'main protocol' stamp: 'LF 2/10/2021 16:13:14'!
+!TusLibrosSystem methodsFor: 'main protocol' stamp: 'LF 2/11/2021 10:31:50'!
 addToNewCart: aBook
 	
 	| theCart |
 	
-	isbnLibrary detect:[:isbnBook | isbnBook = aBook isbn] ifNone:[^nil].
+	isbnLibrary detect:[:isbnBook | isbnBook = aBook] ifNone:[^nil].
 		
 	theCart := Cart initialize.
 	
@@ -187,39 +187,6 @@ initializeWith: booksIsbn
 	^self new initializeSystemWith: booksIsbn.! !
 
 
-!classDefinition: #Book category: 'TusLibros-Ejercicio'!
-TusLibrosSystem subclass: #Book
-	instanceVariableNames: 'title isbn'
-	classVariableNames: ''
-	poolDictionaries: ''
-	category: 'TusLibros-Ejercicio'!
-
-!Book methodsFor: 'initialization' stamp: 'LF 2/10/2021 14:58:23'!
-initializeWithIsbn: aBookIsbn
-
-	isbn := aBookIsbn.
-	
-	! !
-
-
-!Book methodsFor: 'accessing' stamp: 'LF 2/10/2021 14:48:09'!
-isbn
-
-	^isbn
-	! !
-
-"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
-
-!classDefinition: 'Book class' category: 'TusLibros-Ejercicio'!
-Book class
-	instanceVariableNames: ''!
-
-!Book class methodsFor: 'instance creation' stamp: 'LF 2/10/2021 14:59:06'!
-withIsbn: aBookIsbn
-
-	^self new initializeWithIsbn: aBookIsbn.! !
-
-
 !classDefinition: #Cart category: 'TusLibros-Ejercicio'!
 TusLibrosSystem subclass: #Cart
 	instanceVariableNames: 'content lastActivityTime'
@@ -241,10 +208,10 @@ content
 	^content! !
 
 
-!Cart methodsFor: 'main protocol' stamp: 'LF 2/10/2021 15:38:45'!
+!Cart methodsFor: 'main protocol' stamp: 'LF 2/11/2021 10:32:15'!
 hasSpecificBook: aBookIsbn
 	
-	content detect: [ : aBook | aBook isbn = aBookIsbn ] ifNone:[ ^false ].
+	content detect: [ : aBook | aBook = aBookIsbn ] ifNone:[ ^false ].
 	
 	^true.! !
 
