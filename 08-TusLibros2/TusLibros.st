@@ -102,49 +102,7 @@ TestCase subclass: #CheckoutSystemTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:55:29'!
-createCart
-
-	| aCatalog |
-	
-	aCatalog := Set with: (Dictionary new at: #ABC123 put: (150*peso)) with: (Dictionary new at: #DEF456 put: (50*peso)).
-	
-	^Cart withCatalog: aCatalog.! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/11/2021 21:13:33'!
-createCheckoutSystem
-	
-	|checkoutSystem|
-	
-	checkoutSystem := CheckoutSystem initialize.
-	
-	^checkoutSystem.! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/11/2021 21:44:52'!
-createCreditCardNumbered: creditCardNumber withExpirationDate: expirationDate of: theOwner 
-	
-	|creditCard|
-	
-	creditCard:= Dictionary new.
-	
-	creditCard at: #number put: creditCardNumber.
-	creditCard at: #expiration put: expirationDate.
-	creditCard at: #owner put: theOwner.
-	
-	^creditCard! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:22:11'!
-createPostnetSystem
-	
-	|postnetSystem blockedCards|
-	
-	blockedCards:= OrderedCollection with: 1234567891234511.
-	
-	postnetSystem := FakePostnet initializeWithBlockedCards: blockedCards.
-	
-	^postnetSystem.! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:27:28'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/12/2021 19:27:28'!
 test01AChekcoutWith0ItemsCantBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -161,7 +119,7 @@ test01AChekcoutWith0ItemsCantBeDone
 	
 	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
 
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 14:02:38'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:34:27'!
 test02AChekcoutWith1ItemCanBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem |
@@ -180,9 +138,9 @@ test02AChekcoutWith1ItemCanBeDone
 
 	self assert:(checkoutSystem checkoutWasDoneCorrectly).
 	
-	self assert:(checkoutSystem checkoutTotalPriceWas: 150*peso).! !
+! !
 
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 14:02:58'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:34:35'!
 test03AChekcoutWithManyItemsCanBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -202,10 +160,9 @@ test03AChekcoutWithManyItemsCanBeDone
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self assert:(checkoutSystem checkoutWasDoneCorrectly).
-	
-	self assert:(checkoutSystem checkoutTotalPriceWas: 200*peso).! !
+! !
 
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:59:46'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:08:24'!
 test04CantCheckoutWithAnInvalidCreditCardNumber
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -220,11 +177,12 @@ test04CantCheckoutWithAnInvalidCreditCardNumber
 	
 	aCreditCard := self createCreditCardNumbered: 787 withExpirationDate: 122025 of: 'Mirko Wu'.
 
-	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
+		self assert: anException messageText equals:'Credit card number must have 16 characters'.
+		self deny: (checkoutSystem checkoutWasDoneCorrectly).
+	].! !
 
-	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:59:53'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:11:21'!
 test05CantCheckoutWithAnInvalidCreditCardExpirationDate
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -239,11 +197,12 @@ test05CantCheckoutWithAnInvalidCreditCardExpirationDate
 	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122020 of: 'Mirko Wu'.
 
-	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
+		self assert: anException messageText equals:'Credit card expiration month must be in between 1 and 12 and year cant be in the past'.
+		self deny: (checkoutSystem checkoutWasDoneCorrectly).
+	].! !
 
-	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:59:59'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:06:49'!
 test06CantCheckoutWithAnInvalidCreditCardOwnerName
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -258,11 +217,12 @@ test06CantCheckoutWithAnInvalidCreditCardOwnerName
 	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Salvador Felipe Jacinto Dalí y Domenech'.
 
-	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
+		self assert: anException messageText equals:'Credit card owner name must have 30 characters or less'.
+		self deny: (checkoutSystem checkoutWasDoneCorrectly).
+	].! !
 
-	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
-
-!CheckoutSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 14:00:05'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 14:00:05'!
 test07CantCheckoutWithAnBlockedCreditCard
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -280,6 +240,93 @@ test07CantCheckoutWithAnBlockedCreditCard
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
+
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:35:28'!
+test08CheckoutSystemKnowsTransactionTotalFor1Item
+	
+	|checkoutSystem aCart aCreditCard postnetSystem|
+	
+	aCart:= self createCart.
+	
+	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	
+	checkoutSystem := self createCheckoutSystem.
+	
+	postnetSystem := self createPostnetSystem.
+	
+	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
+
+	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+
+	self assert: (checkoutSystem checkoutWasDoneCorrectly).
+	
+	self assert: (checkoutSystem checkoutTotalPriceWas: 150*peso).! !
+
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:36:03'!
+test09CheckoutSystemKnowsTransactionTotalForMoreThan1Item
+	
+	|checkoutSystem aCart aCreditCard postnetSystem|
+	
+	aCart:= self createCart.
+	
+	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	
+	aCart add: (Dictionary new at: #DEF456 put: 50*peso).
+	
+	checkoutSystem := self createCheckoutSystem.
+	
+	postnetSystem := self createPostnetSystem.
+	
+	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
+
+	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+
+	self assert: (checkoutSystem checkoutWasDoneCorrectly).
+	
+	self assert: (checkoutSystem checkoutTotalPriceWas: 200*peso).! !
+
+
+!CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/13/2021 13:55:29'!
+createCart
+
+	| aCatalog |
+	
+	aCatalog := Set with: (Dictionary new at: #ABC123 put: (150*peso)) with: (Dictionary new at: #DEF456 put: (50*peso)).
+	
+	^Cart withCatalog: aCatalog.! !
+
+!CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/11/2021 21:13:33'!
+createCheckoutSystem
+	
+	|checkoutSystem|
+	
+	checkoutSystem := CheckoutSystem initialize.
+	
+	^checkoutSystem.! !
+
+!CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/11/2021 21:44:52'!
+createCreditCardNumbered: creditCardNumber withExpirationDate: expirationDate of: theOwner 
+	
+	|creditCard|
+	
+	creditCard:= Dictionary new.
+	
+	creditCard at: #number put: creditCardNumber.
+	creditCard at: #expiration put: expirationDate.
+	creditCard at: #owner put: theOwner.
+	
+	^creditCard! !
+
+!CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/13/2021 13:22:11'!
+createPostnetSystem
+	
+	|postnetSystem blockedCards|
+	
+	blockedCards:= OrderedCollection with: 1234567891234511.
+	
+	postnetSystem := FakePostnet initializeWithBlockedCards: blockedCards.
+	
+	^postnetSystem.! !
 
 
 !classDefinition: #Cart category: 'TusLibros'!
@@ -324,6 +371,17 @@ quantityOf: aBook
 	
 	^books occurrencesOf: aBook! !
 
+!Cart methodsFor: 'accessing' stamp: 'LF 2/13/2021 13:58:43'!
+valueOfCart
+
+	|value|
+	
+	value:= 0.
+	
+	books do:[:eachBookValue| value:= value + eachBookValue].
+	
+	^value.! !
+
 
 !Cart methodsFor: 'testing' stamp: 'LL 1/20/2021 21:33:04'!
 isEmpty
@@ -340,18 +398,6 @@ assertIsInCatalog: aBook
 assertValidNumberOfCopies: numberOfBooksToAdd
 
 	^ numberOfBooksToAdd strictlyPositive ifFalse: [ self error: self class invalidNumberOfCopiesErrorMessage ]! !
-
-
-!Cart methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:58:43'!
-valueOfCart
-
-	|value|
-	
-	value:= 0.
-	
-	books do:[:eachBookValue| value:= value + eachBookValue].
-	
-	^value.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -383,12 +429,26 @@ Object subclass: #CheckoutSystem
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:52:38'!
+!CheckoutSystem methodsFor: 'initialization' stamp: 'LF 2/13/2021 18:00:40'!
+initializeCheckoutSystem
+
+	checkoutTicket := Dictionary new.
+	checkoutTicket  at: #total put: 0.
+	checkoutTicket  at: #status put: 'incorrect'.
+	
+	
+	
+
+! !
+
+
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:09:12'!
 checkCardNumber: aCreditCard 
 	
-	^(aCreditCard at: #number) asString size = 16 ! !
+	((aCreditCard at: #number) asString size = 16)ifFalse:[self error: self class invalidCreditCardNumberLength].
+	^true.! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:54:15'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:40:28'!
 checkExpirationDate: 	aCreditCard 
 	
 	|month year expirationDate|
@@ -405,21 +465,25 @@ checkExpirationDate: 	aCreditCard
 	year at: 3 put: (expirationDate asString at: 5).
 	year at: 4 put:  (expirationDate asString at: 6).
 	
-	^(aCreditCard at: #expiration) asString size = 6 
-	and:( (0<(month asInteger) and:((month asInteger) < 13)) and:( year asInteger >= DateAndTime now yearNumber)).! !
+	((aCreditCard at: #expiration) asString size = 6 	
+		and:( 0<(month asInteger) and:(month asInteger < 13)) 
+			and:( year asInteger >= DateAndTime now yearNumber))
+	ifFalse:[self error: self class invalidCreditCardExpirationDate ].
+	^true.! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:47:41'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:47:41'!
 checkIfTheCartIsNotEmpty: aCart 
 	
 	^(aCart contents) size > 0.! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:34:57'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:03:35'!
 checkOwnerName: aCreditCard
-
-	^(aCreditCard at: #owner) size < 31.
+	
+	((aCreditCard at: #owner) size < 31)ifFalse:[self error: self class invalidCreditCardOwnerNameLength].
+	^true.
 	! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 19:31:58'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:31:58'!
 checkValidCreditCardData: aCreditCard
 
 	^(self checkCardNumber: aCreditCard )
@@ -430,40 +494,39 @@ checkValidCreditCardData: aCreditCard
 	
 	! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:45:05'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 14:02:03'!
+checkoutTotalPriceWas: aPrice.
+	
+	^(checkoutTicket at: #total) = aPrice.! !
+
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 13:11:20'!
+checkoutWasDoneCorrectly
+	
+	^(checkoutTicket at: #status) = 'correct'.! !
+
+
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/13/2021 18:42:23'!
 checkout: aCart with: aCreditCard on: fakePostnet  
 	
 	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) ifTrue:[
-	checkoutTicket at:#status put: (fakePostnet executePaymentOf: aCart with: aCreditCard).
-	checkoutTicket at:#total put: (aCart valueOfCart )]
+	fakePostnet executePaymentOf: aCart with: aCreditCard.	
+	self updatePaymentInfoOf:aCart with: fakePostnet.].
+
+
+
+
+	
 
 		
 	
 	
 	! !
 
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 14:02:03'!
-checkoutTotalPriceWas: aPrice.
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/13/2021 18:40:33'!
+updatePaymentInfoOf: aCart with: aFakePostnet 
 	
-	^(checkoutTicket at: #total) = aPrice.! !
-
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:11:20'!
-checkoutWasDoneCorrectly
-	
-	^(checkoutTicket at: #status) = 'correct'.! !
-
-!CheckoutSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:08:39'!
-initializeCheckoutSystem
-
-	checkoutTicket := Dictionary new.
-	
-	checkoutTicket  at: #total put: 0.
-	checkoutTicket  at: #status put: 'incorrect'.
-	
-	
-	
-
-! !
+	checkoutTicket at:#status put: (aFakePostnet paymentStatus).
+	checkoutTicket at:#total put: (aCart valueOfCart )! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -471,7 +534,23 @@ initializeCheckoutSystem
 CheckoutSystem class
 	instanceVariableNames: ''!
 
-!CheckoutSystem class methodsFor: 'as yet unclassified' stamp: 'LF 2/11/2021 21:20:16'!
+!CheckoutSystem class methodsFor: 'error messages' stamp: 'LF 2/13/2021 17:10:38'!
+invalidCreditCardExpirationDate
+
+	^'Credit card expiration month must be in between 1 and 12 and year cant be in the past'! !
+
+!CheckoutSystem class methodsFor: 'error messages' stamp: 'LF 2/13/2021 16:48:48'!
+invalidCreditCardNumberLength
+
+	^'Credit card number must have 16 characters'! !
+
+!CheckoutSystem class methodsFor: 'error messages' stamp: 'LF 2/13/2021 16:50:14'!
+invalidCreditCardOwnerNameLength
+
+	^'Credit card owner name must have 30 characters or less'! !
+
+
+!CheckoutSystem class methodsFor: 'initialization' stamp: 'LF 2/11/2021 21:20:16'!
 initialize
 
 	^self new initializeCheckoutSystem.
@@ -481,21 +560,27 @@ initialize
 
 !classDefinition: #FakePostnet category: 'TusLibros'!
 Object subclass: #FakePostnet
-	instanceVariableNames: 'blockedCards'
+	instanceVariableNames: 'blockedCards paymentStatus'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!FakePostnet methodsFor: 'as yet unclassified' stamp: 'LF 2/13/2021 13:15:47'!
-executePaymentOf: aCart with: aCreditCard 
-
-	(blockedCards includes: (aCreditCard at: #number))ifTrue:[^'incorrect'].
-	^'correct'.! !
-
-!FakePostnet methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 20:14:28'!
+!FakePostnet methodsFor: 'initialization' stamp: 'LF 2/13/2021 18:36:40'!
 initializePostnetWith: potentialBlockedCards
 
-	blockedCards := potentialBlockedCards .! !
+	blockedCards := potentialBlockedCards.
+	paymentStatus  := 'incorrect'.! !
+
+
+!FakePostnet methodsFor: 'accesing' stamp: 'LF 2/13/2021 18:41:37'!
+paymentStatus
+^paymentStatus.! !
+
+
+!FakePostnet methodsFor: 'system primitives' stamp: 'LF 2/13/2021 18:36:22'!
+executePaymentOf: aCart with: aCreditCard 
+
+	(blockedCards includes: (aCreditCard at: #number))ifFalse:[paymentStatus := 'correct'].! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -503,13 +588,7 @@ initializePostnetWith: potentialBlockedCards
 FakePostnet class
 	instanceVariableNames: ''!
 
-!FakePostnet class methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 20:23:49'!
-executePaymentOf: aCart with: aCreditCard 
-
-	
-	! !
-
-!FakePostnet class methodsFor: 'as yet unclassified' stamp: 'LF 2/12/2021 20:14:16'!
+!FakePostnet class methodsFor: 'initialization' stamp: 'LF 2/12/2021 20:14:16'!
 initializeWithBlockedCards: blockedCards
 
 	^self new initializePostnetWith: blockedCards.! !
