@@ -378,8 +378,9 @@ add: aBook quantity: numberOfBooksToAdd
 	books add: aBook withOccurrences: numberOfBooksToAdd.! !
 
 
-!Cart methodsFor: 'accessing' stamp: 'LL 1/20/2021 22:11:43'!
+!Cart methodsFor: 'accessing' stamp: 'LF 2/14/2021 15:18:44'!
 contents
+	
 	^books copy! !
 
 !Cart methodsFor: 'accessing' stamp: 'LL 1/21/2021 21:39:26'!
@@ -470,24 +471,18 @@ checkCardNumber: aCreditCard
 	((aCreditCard at: #number) asString size = 16)ifFalse:[self error: self class invalidCreditCardNumberLength].
 	^true.! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:40:28'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/14/2021 15:44:49'!
 checkExpirationDate: 	aCreditCard 
 	
 	|month year expirationDate|
 	
-	expirationDate:=aCreditCard at: #expiration.
+	expirationDate:= (aCreditCard at: #expiration) asString.
 	
-	month:='xx'.
-	month at: 1 put: (expirationDate asString at: 1).
-	month at: 2 put:  (expirationDate asString at: 2).
+	month:= expirationDate copyFrom: 1 to: 2.
 	
-	year:= 'xxxx'.
-	year at: 1 put: (expirationDate asString at: 3).
-	year at: 2 put: (expirationDate asString at: 4).
-	year at: 3 put: (expirationDate asString at: 5).
-	year at: 4 put:  (expirationDate asString at: 6).
+	year:= expirationDate  copyFrom: 3 to: 6.
 	
-	((aCreditCard at: #expiration) asString size = 6 	
+	(expirationDate size = 6 	
 		and:( 0<(month asInteger) and:(month asInteger < 13)) 
 			and:( year asInteger >= DateAndTime now yearNumber))
 	ifFalse:[self error: self class invalidCreditCardExpirationDate ].
@@ -527,13 +522,12 @@ checkoutWasDoneCorrectly
 	^(checkoutTicket at: #status) = 'correct'.! !
 
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 12:19:39'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 15:48:29'!
 checkout: aCart with: aCreditCard on: fakePostnet  
 	
-	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) ifTrue:[
-	fakePostnet executePaymentOf: aCart with: aCreditCard.	
-	self updatePaymentInfoOf:aCart with: fakePostnet.
-	checkoutHistorial add: aCart contents].
+	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) 
+	ifTrue:[ fakePostnet executePaymentOf: aCart with: aCreditCard.	
+			self updatePaymentInfoOf:aCart with: fakePostnet.].
 
 
 
@@ -545,11 +539,12 @@ checkout: aCart with: aCreditCard on: fakePostnet
 	
 	! !
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/13/2021 18:40:33'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 15:48:20'!
 updatePaymentInfoOf: aCart with: aFakePostnet 
 	
 	checkoutTicket at:#status put: (aFakePostnet paymentStatus).
-	checkoutTicket at:#total put: (aCart valueOfCart )! !
+	checkoutTicket at:#total put: (aCart valueOfCart ).
+	checkoutHistorial add: aCart contents.! !
 
 
 !CheckoutSystem methodsFor: 'accesing' stamp: 'LF 2/14/2021 12:21:07'!
@@ -602,9 +597,10 @@ initializePostnetWith: potentialBlockedCards
 	paymentStatus  := 'incorrect'.! !
 
 
-!FakePostnet methodsFor: 'accesing' stamp: 'LF 2/13/2021 18:41:37'!
+!FakePostnet methodsFor: 'accesing' stamp: 'LF 2/14/2021 15:18:35'!
 paymentStatus
-^paymentStatus.! !
+	
+	^paymentStatus.! !
 
 
 !FakePostnet methodsFor: 'system primitives' stamp: 'LF 2/13/2021 18:36:22'!
