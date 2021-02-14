@@ -119,7 +119,7 @@ test01AChekcoutWith0ItemsCantBeDone
 	
 	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:34:27'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/14/2021 12:27:45'!
 test02AChekcoutWith1ItemCanBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem |
@@ -285,6 +285,27 @@ test09CheckoutSystemKnowsTransactionTotalForMoreThan1Item
 	
 	self assert: (checkoutSystem checkoutTotalPriceWas: 200*peso).! !
 
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/14/2021 12:21:45'!
+test10CheckoutSystemKnowsTransactionHistorial
+	
+	|checkoutSystem aCart aCreditCard postnetSystem|
+	
+	aCart:= self createCart.
+	
+	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	
+	checkoutSystem := self createCheckoutSystem.
+	
+	postnetSystem := self createPostnetSystem.
+	
+	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
+
+	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+
+	self assert: (checkoutSystem checkoutWasDoneCorrectly).
+
+	self assert: (checkoutSystem checkoutHistorial size isEqualTo: 1).! !
+
 
 !CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/13/2021 13:55:29'!
 createCart
@@ -424,15 +445,16 @@ invalidNumberOfCopiesErrorMessage
 
 !classDefinition: #CheckoutSystem category: 'TusLibros'!
 Object subclass: #CheckoutSystem
-	instanceVariableNames: 'checkoutTicket'
+	instanceVariableNames: 'checkoutTicket checkoutHistorial'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CheckoutSystem methodsFor: 'initialization' stamp: 'LF 2/13/2021 18:00:40'!
+!CheckoutSystem methodsFor: 'initialization' stamp: 'LF 2/14/2021 12:20:19'!
 initializeCheckoutSystem
 
 	checkoutTicket := Dictionary new.
+	checkoutHistorial := OrderedCollection new.
 	checkoutTicket  at: #total put: 0.
 	checkoutTicket  at: #status put: 'incorrect'.
 	
@@ -505,12 +527,13 @@ checkoutWasDoneCorrectly
 	^(checkoutTicket at: #status) = 'correct'.! !
 
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/13/2021 18:42:23'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 12:19:39'!
 checkout: aCart with: aCreditCard on: fakePostnet  
 	
 	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) ifTrue:[
 	fakePostnet executePaymentOf: aCart with: aCreditCard.	
-	self updatePaymentInfoOf:aCart with: fakePostnet.].
+	self updatePaymentInfoOf:aCart with: fakePostnet.
+	checkoutHistorial add: aCart contents].
 
 
 
@@ -527,6 +550,13 @@ updatePaymentInfoOf: aCart with: aFakePostnet
 	
 	checkoutTicket at:#status put: (aFakePostnet paymentStatus).
 	checkoutTicket at:#total put: (aCart valueOfCart )! !
+
+
+!CheckoutSystem methodsFor: 'accesing' stamp: 'LF 2/14/2021 12:21:07'!
+checkoutHistorial
+	
+	^checkoutHistorial.
+	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
