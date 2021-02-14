@@ -102,7 +102,7 @@ TestCase subclass: #CheckoutSystemTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/12/2021 19:27:28'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:08:29'!
 test01AChekcoutWith0ItemsCantBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -110,28 +110,24 @@ test01AChekcoutWith0ItemsCantBeDone
 	aCart:= self createCart.
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 	
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 	
 	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/14/2021 12:27:45'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:16:08'!
 test02AChekcoutWith1ItemCanBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem |
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: (150.40*peso)).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
@@ -140,21 +136,18 @@ test02AChekcoutWith1ItemCanBeDone
 	
 ! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:34:35'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:14:53'!
 test03AChekcoutWithManyItemsCanBeDone
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
-	
-	aCart add: (Dictionary new at: #DEF456 put: 50*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
+	aCart add: (Dictionary new at: #DEF456 put: 50.25*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
@@ -162,19 +155,17 @@ test03AChekcoutWithManyItemsCanBeDone
 	self assert:(checkoutSystem checkoutWasDoneCorrectly).
 ! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:08:24'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:14:57'!
 test04CantCheckoutWithAnInvalidCreditCardNumber
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 787 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
@@ -182,19 +173,17 @@ test04CantCheckoutWithAnInvalidCreditCardNumber
 		self deny: (checkoutSystem checkoutWasDoneCorrectly).
 	].! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:11:21'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:15:02'!
 test05CantCheckoutWithAnInvalidCreditCardExpirationDate
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122020 of: 'Mirko Wu'.
 
 	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
@@ -202,19 +191,17 @@ test05CantCheckoutWithAnInvalidCreditCardExpirationDate
 		self deny: (checkoutSystem checkoutWasDoneCorrectly).
 	].! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 17:06:49'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:15:06'!
 test06CantCheckoutWithAnInvalidCreditCardOwnerName
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Salvador Felipe Jacinto Dalí y Domenech'.
 
 	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
@@ -222,97 +209,85 @@ test06CantCheckoutWithAnInvalidCreditCardOwnerName
 		self deny: (checkoutSystem checkoutWasDoneCorrectly).
 	].! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 14:00:05'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:15:11'!
 test07CantCheckoutWithAnBlockedCreditCard
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234511 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self deny: (checkoutSystem checkoutWasDoneCorrectly).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:35:28'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:16:58'!
 test08CheckoutSystemKnowsTransactionTotalFor1Item
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self assert: (checkoutSystem checkoutWasDoneCorrectly).
-	
-	self assert: (checkoutSystem checkoutTotalPriceWas: 150*peso).! !
+	self assert: (checkoutSystem checkoutTotalPriceWas: 150.40*peso).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/13/2021 16:36:03'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:17:13'!
 test09CheckoutSystemKnowsTransactionTotalForMoreThan1Item
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
-	
-	aCart add: (Dictionary new at: #DEF456 put: 50*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
+	aCart add: (Dictionary new at: #DEF456 put: 50.25*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self assert: (checkoutSystem checkoutWasDoneCorrectly).
-	
-	self assert: (checkoutSystem checkoutTotalPriceWas: 200*peso).! !
+	self assert: (checkoutSystem checkoutTotalPriceWas: 200.65*peso).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/14/2021 12:21:45'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'MW 2/14/2021 17:15:18'!
 test10CheckoutSystemKnowsTransactionHistorial
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
 	
 	aCart:= self createCart.
 	
-	aCart add: (Dictionary new at: #ABC123 put: 150*peso).
+	aCart add: (Dictionary new at: #ABC123 put: 150.40*peso).
 	
 	checkoutSystem := self createCheckoutSystem.
-	
 	postnetSystem := self createPostnetSystem.
-	
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self assert: (checkoutSystem checkoutWasDoneCorrectly).
-
 	self assert: (checkoutSystem checkoutHistorial size isEqualTo: 1).! !
 
 
-!CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/13/2021 13:55:29'!
+!CheckoutSystemTest methodsFor: 'private' stamp: 'MW 2/14/2021 17:12:31'!
 createCart
 
 	| aCatalog |
 	
-	aCatalog := Set with: (Dictionary new at: #ABC123 put: (150*peso)) with: (Dictionary new at: #DEF456 put: (50*peso)).
+	aCatalog := Set with: (Dictionary new at: #ABC123 put: (150.40*peso)) with: (Dictionary new at: #DEF456 put: (50.25*peso)).
 	
 	^Cart withCatalog: aCatalog.! !
 
@@ -383,10 +358,10 @@ contents
 	
 	^books copy! !
 
-!Cart methodsFor: 'accessing' stamp: 'LL 1/21/2021 21:39:26'!
+!Cart methodsFor: 'accessing' stamp: 'MW 2/14/2021 17:02:16'!
 includes: aBook
 
-	^ books includes: aBook! !
+	^books includes: aBook! !
 
 !Cart methodsFor: 'accessing' stamp: 'LL 1/20/2021 21:51:06'!
 quantityOf: aBook
@@ -471,7 +446,7 @@ checkCardNumber: aCreditCard
 	((aCreditCard at: #number) asString size = 16)ifFalse:[self error: self class invalidCreditCardNumberLength].
 	^true.! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/14/2021 15:44:49'!
+!CheckoutSystem methodsFor: 'testing' stamp: 'MW 2/14/2021 17:02:29'!
 checkExpirationDate: 	aCreditCard 
 	
 	|month year expirationDate|
@@ -479,7 +454,6 @@ checkExpirationDate: 	aCreditCard
 	expirationDate:= (aCreditCard at: #expiration) asString.
 	
 	month:= expirationDate copyFrom: 1 to: 2.
-	
 	year:= expirationDate  copyFrom: 3 to: 6.
 	
 	(expirationDate size = 6 	
@@ -499,6 +473,9 @@ checkOwnerName: aCreditCard
 	((aCreditCard at: #owner) size < 31)ifFalse:[self error: self class invalidCreditCardOwnerNameLength].
 	^true.
 	! !
+
+!CheckoutSystem methodsFor: 'testing' stamp: 'MW 2/14/2021 17:05:15'!
+checkTransactionAmount! !
 
 !CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:31:58'!
 checkValidCreditCardData: aCreditCard
@@ -522,10 +499,10 @@ checkoutWasDoneCorrectly
 	^(checkoutTicket at: #status) = 'correct'.! !
 
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 15:48:29'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'MW 2/14/2021 17:16:36'!
 checkout: aCart with: aCreditCard on: fakePostnet  
 	
-	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) 
+	((self checkValidCreditCardData: aCreditCard ) and: (self checkIfTheCartIsNotEmpty: aCart))
 	ifTrue:[ fakePostnet executePaymentOf: aCart with: aCreditCard.	
 			self updatePaymentInfoOf:aCart with: fakePostnet.].
 
@@ -564,15 +541,20 @@ invalidCreditCardExpirationDate
 
 	^'Credit card expiration month must be in between 1 and 12 and year cant be in the past'! !
 
-!CheckoutSystem class methodsFor: 'error messages' stamp: 'LF 2/13/2021 16:48:48'!
+!CheckoutSystem class methodsFor: 'error messages' stamp: 'MW 2/14/2021 17:23:03'!
 invalidCreditCardNumberLength
 
-	^'Credit card number must have 16 characters'! !
+	^'Credit card number must have 16 digits'! !
 
 !CheckoutSystem class methodsFor: 'error messages' stamp: 'LF 2/13/2021 16:50:14'!
 invalidCreditCardOwnerNameLength
 
 	^'Credit card owner name must have 30 characters or less'! !
+
+!CheckoutSystem class methodsFor: 'error messages' stamp: 'MW 2/14/2021 17:23:17'!
+invalidTransactionAmount
+
+	^'The transaction amount cannot have more than 15 digits and 2 decimal places'! !
 
 
 !CheckoutSystem class methodsFor: 'initialization' stamp: 'LF 2/11/2021 21:20:16'!
