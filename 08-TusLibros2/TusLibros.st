@@ -474,9 +474,6 @@ checkOwnerName: aCreditCard
 	^true.
 	! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'MW 2/14/2021 17:05:15'!
-checkTransactionAmount! !
-
 !CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:31:58'!
 checkValidCreditCardData: aCreditCard
 
@@ -550,11 +547,6 @@ invalidCreditCardNumberLength
 invalidCreditCardOwnerNameLength
 
 	^'Credit card owner name must have 30 characters or less'! !
-
-!CheckoutSystem class methodsFor: 'error messages' stamp: 'MW 2/14/2021 17:23:17'!
-invalidTransactionAmount
-
-	^'The transaction amount cannot have more than 15 digits and 2 decimal places'! !
 
 
 !CheckoutSystem class methodsFor: 'initialization' stamp: 'LF 2/11/2021 21:20:16'!
