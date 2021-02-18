@@ -285,7 +285,7 @@ test09CheckoutSystemKnowsTransactionTotalForMoreThan1Item
 	
 	self assert: (checkoutSystem checkoutTotalPriceWas: 200*peso).! !
 
-!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/14/2021 12:21:45'!
+!CheckoutSystemTest methodsFor: 'testing' stamp: 'LF 2/18/2021 15:18:14'!
 test10CheckoutSystemKnowsTransactionHistorial
 	
 	|checkoutSystem aCart aCreditCard postnetSystem|
@@ -301,10 +301,12 @@ test10CheckoutSystemKnowsTransactionHistorial
 	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Mirko Wu'.
 
 	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
+	
+	checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem.
 
 	self assert: (checkoutSystem checkoutWasDoneCorrectly).
 
-	self assert: (checkoutSystem checkoutHistorial size isEqualTo: 1).! !
+	self assert: (checkoutSystem checkoutHistorial size isEqualTo: 2).! !
 
 
 !CheckoutSystemTest methodsFor: 'private' stamp: 'LF 2/13/2021 13:55:29'!
@@ -465,14 +467,14 @@ initializeCheckoutSystem
 ! !
 
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:09:12'!
-checkCardNumber: aCreditCard 
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/18/2021 15:23:34'!
+assertCardNumber: aCreditCard 
 	
 	((aCreditCard at: #number) asString size = 16)ifFalse:[self error: self class invalidCreditCardNumberLength].
 	^true.! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/14/2021 15:44:49'!
-checkExpirationDate: 	aCreditCard 
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/18/2021 15:23:49'!
+assertExpirationDate: 	aCreditCard 
 	
 	|month year expirationDate|
 	
@@ -488,24 +490,24 @@ checkExpirationDate: 	aCreditCard
 	ifFalse:[self error: self class invalidCreditCardExpirationDate ].
 	^true.! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:47:41'!
-checkIfTheCartIsNotEmpty: aCart 
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/18/2021 15:24:03'!
+assertIfTheCartIsNotEmpty: aCart 
 	
 	^(aCart contents) size > 0.! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/13/2021 17:03:35'!
-checkOwnerName: aCreditCard
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/18/2021 15:24:16'!
+assertOwnerName: aCreditCard
 	
 	((aCreditCard at: #owner) size < 31)ifFalse:[self error: self class invalidCreditCardOwnerNameLength].
 	^true.
 	! !
 
-!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/12/2021 19:31:58'!
-checkValidCreditCardData: aCreditCard
+!CheckoutSystem methodsFor: 'testing' stamp: 'LF 2/18/2021 15:24:35'!
+assertValidCreditCardData: aCreditCard
 
-	^(self checkCardNumber: aCreditCard )
-	and: (self checkExpirationDate: aCreditCard)
-	and: (self checkOwnerName: aCreditCard ).
+	^(self assertCardNumber: aCreditCard )
+	and: (self assertExpirationDate: aCreditCard)
+	and: (self assertOwnerName: aCreditCard ).
 	
 	
 	
@@ -522,10 +524,10 @@ checkoutWasDoneCorrectly
 	^(checkoutTicket at: #status) = 'correct'.! !
 
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 15:48:29'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/18/2021 15:24:35'!
 checkout: aCart with: aCreditCard on: fakePostnet  
 	
-	((self checkValidCreditCardData: aCreditCard )and: (self checkIfTheCartIsNotEmpty: aCart)) 
+	((self assertValidCreditCardData: aCreditCard )and: (self assertIfTheCartIsNotEmpty: aCart)) 
 	ifTrue:[ fakePostnet executePaymentOf: aCart with: aCreditCard.	
 			self updatePaymentInfoOf:aCart with: fakePostnet.].
 
@@ -539,12 +541,12 @@ checkout: aCart with: aCreditCard on: fakePostnet
 	
 	! !
 
-!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/14/2021 15:48:20'!
+!CheckoutSystem methodsFor: 'main protocol' stamp: 'LF 2/18/2021 15:32:44'!
 updatePaymentInfoOf: aCart with: aFakePostnet 
 	
 	checkoutTicket at:#status put: (aFakePostnet paymentStatus).
 	checkoutTicket at:#total put: (aCart valueOfCart ).
-	checkoutHistorial add: aCart contents.! !
+	checkoutHistorial add: aCart valueOfCart.! !
 
 
 !CheckoutSystem methodsFor: 'accesing' stamp: 'LF 2/14/2021 12:21:07'!
