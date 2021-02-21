@@ -3,7 +3,7 @@ TestCase subclass: #CartTest
 	instanceVariableNames: ''
 	classVariableNames: ''
 	poolDictionaries: ''
-	category: 'TusLibros'!
+	category: 'TusLibros'! 
 
 !CartTest methodsFor: 'tests' stamp: 'LL 1/21/2021 20:09:58'!
 test01NewCartIsEmpty
@@ -215,7 +215,7 @@ test06CantCheckoutWithAnInvalidCreditCardOwnerName
 	
 	postnetSystem := self createPostnetSystem.
 	
-	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Salvador Felipe Jacinto Dalí y Domenech'.
+	aCreditCard := self createCreditCardNumbered: 1234567891234567 withExpirationDate: 122025 of: 'Salvador Felipe Jacinto DalÃ­ y Domenech'.
 
 	self should: 	[checkoutSystem checkout: aCart with: aCreditCard on: postnetSystem] raise: Error withExceptionDo: [ :anException |
 		self assert: anException messageText equals:'Credit card owner name must have 30 characters or less'.
