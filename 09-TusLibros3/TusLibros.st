@@ -252,109 +252,78 @@ TestCase subclass: #UserSystemTest
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:41:56'!
-debit: anAmountToDebit from: aCreditCard
-
-	^merchantProcessorBehaviour value: anAmountToDebit value: aCreditCard! !
-
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:47:09'!
-merchantProcessorBehaviour: newBehaviour
-
-	merchantProcessorBehaviour := newBehaviour! !
-
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:36:58'!
-merchantProcessorForTest
-	
-	^self! !
-
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:09:27'!
-setUp
-	
-	|debitedAmountFromCreditCard debitedCreditCard|
-
-	objectsFactory := PublisherTestObjectsFactory new.
-	
-	self merchantProcessorBehaviour: [ :anAmountToDebit :aCreditCard | 
-	debitedAmountFromCreditCard := anAmountToDebit.
-	debitedCreditCard := aCreditCard.].! !
-
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:49:27'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:28:07'!
 test01UserWithAnInvalidIDCantSignUpInTheSystem
 
-	|interface userID userPassword |
+	|system userID userPassword |
 
 	userID:= 'a'.
 	
 	userPassword:= '*****'.
 	
-	interface := UserSystem newInterface.
+	system := UserSystem newSystem.
 	
-	self should:[interface signUpUserID: userID withPassword: userPassword]
+	self should:[system signUpUserID: userID withPassword: userPassword]
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidUserIDError.
-			self deny: (interface theUserIsRegisteredOnTheDatabase: userID)].	
-		
-	
-	"interface := Inerface newInterfaceWith: aClock.
-	aClock new
-	aClock now 
-	aClock timeStampPlus: 35*minute ->>> aClock now +  35*MINUTE"
+			self deny: (system theUserIsRegisteredOnTheDatabase: userID)].	
+
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:49:14'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:28:24'!
 test02UserWithValidIDCanSignUpInTheSystem
 
-	|interface userID userPassword |
+	|system userID userPassword |
 
 	userID:= 41395965.
 	
 	userPassword:= 'todoBitcoin'.
 	
-	interface := UserSystem newInterface.
+	system := UserSystem newSystem.
 	
-	interface signUpUserID: userID withPassword: userPassword.
+	system signUpUserID: userID withPassword: userPassword.
 	
-	self assert: (interface theUserIsRegisteredOnTheDatabase: userID).
+	self assert: (system theUserIsRegisteredOnTheDatabase: userID).
 
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:49:36'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:28:32'!
 test03UserWithAValidIDCanCreateACartInTheSystem
 
-	|interface userID aCartID |
+	|system userID aCartID |
 	
 	userID:= 41395965.
 	
-	interface:= 	objectsFactory anInterfaceWithAValidUser.
+	system:= 	objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	self assert: (interface theUserIsRegisteredOnTheDatabase: userID).
+	self assert: (system theUserIsRegisteredOnTheDatabase: userID).
 	
 	self assert: (aCartID isEqualTo: userID).
 
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 15:00:40'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:28:46'!
 test04SystemCantAddABookToACartWithAnInvalidCartID
 
-	|interface userID aCartID aBook cartContent|
+	|system userID aCartID aBook cartContent|
 	
 	userID:= 41395965.
 	
-	interface:= 	objectsFactory anInterfaceWithAValidUser.
+	system:= 	objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
 	aBook := objectsFactory bookFromTheEditorial.
 	
-	cartContent := interface listTheCartWithID: aCartID.
+	cartContent := system listTheCartWithID: aCartID.
 
-	self should:[	interface addToTheCart: 'invalidID' theBook: aBook aTotalOf: 1.]
+	self should:[	system addToTheCart: 'invalidID' theBook: aBook aTotalOf: 1.]
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidCartIDError.
@@ -364,40 +333,40 @@ test04SystemCantAddABookToACartWithAnInvalidCartID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:49:47'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:28:56'!
 test05SystemCanAddABookToACartWithAValidCartID
 
-	|interface userID aCartID cartContent|
+	|system userID aCartID cartContent|
 	
 	userID:= 41395965.
 	
-	interface:= 	objectsFactory anInterfaceWithAValidUser.
+	system:= 	objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
-	cartContent := interface listTheCartWithID: aCartID.
+	cartContent := system listTheCartWithID: aCartID.
 		
 	self assert: (cartContent size = 1).
 
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 15:00:31'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:12'!
 test06SystemCantListTheCartWithAnInvalidCartID
 
-	|interface userID aCartID cartContent|
+	|system userID aCartID cartContent|
 	
 	userID:= 41395965.
 	
-	interface:= 	objectsFactory anInterfaceWithAValidUser.
+	system:= 	objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 
-	self should:[		cartContent := interface listTheCartWithID: 'invalidID'.]
+	self should:[		cartContent := system listTheCartWithID: 'invalidID'.]
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidCartIDError.
@@ -408,68 +377,68 @@ test06SystemCantListTheCartWithAnInvalidCartID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:50:11'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:18'!
 test07SystemCanListTheCartWithAValidCartID
 
-	|interface userID aCartID cartContent|
+	|system userID aCartID cartContent|
 	
 	userID:= 41395965.
 	
-	interface:= 	objectsFactory anInterfaceWithAValidUser.
+	system:= 	objectsFactory anSystemWithAValidUser.
 		
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
-	cartContent := interface listTheCartWithID: aCartID.
+	cartContent := system listTheCartWithID: aCartID.
 	
-	self assert: (interface theList: cartContent hasALengthOf: 1).
+	self assert: (system theList: cartContent hasALengthOf: 1).
 
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:50:20'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:26'!
 test08SystemCanCheckoutCartWithAValidCartID
 
-	|interface userID aCartID cashier |
+	|system userID aCartID cashier |
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	cashier := objectsFactory aCashier.
 	
-	interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
+	system checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
 	
-	self assert: (interface checkoutWasDoneCorrectlyWith: cashier).
+	self assert: (system checkoutWasDoneCorrectlyWith: cashier).
 
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 15:00:23'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:34'!
 test09SystemCantCheckoutCartWithAnInvalidCartID
 	
-	|interface userID aCartID cashier |
+	|system userID aCartID cashier |
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	cashier := objectsFactory aCashier.
 
-	self should:[		interface checkoutCart: 'invalidCartID' using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.]
+	self should:[		system checkoutCart: 'invalidCartID' using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.]
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidCartIDError.
-			self deny: (interface checkoutWasDoneCorrectlyWith: cashier)].	
+			self deny: (system checkoutWasDoneCorrectlyWith: cashier)].	
 	
 	
 
@@ -479,24 +448,24 @@ test09SystemCantCheckoutCartWithAnInvalidCartID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:17:00'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:41'!
 test10SystemCanListPurchasesOfAUserWithAValidID
 	
-	|interface userID aCartID cashier thePurchaseList|
+	|system userID aCartID cashier thePurchaseList|
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	cashier := objectsFactory aCashier.
 	
-	interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
+	system checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
 	
-	thePurchaseList := interface listPurchasesOf: userID.
+	thePurchaseList := system listPurchasesOf: userID.
 	
 	self assert: (thePurchaseList size = 1).
 
@@ -510,24 +479,24 @@ test10SystemCanListPurchasesOfAUserWithAValidID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:25:16'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:29:53'!
 test11SystemCantListPurchasesOfAUserWithAnInvalidID
 	
-	|interface userID aCartID cashier thePurchaseList|
+	|system userID aCartID cashier thePurchaseList|
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	cashier := objectsFactory aCashier.
 	
-	interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
+	system checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
 
-	self should:[		thePurchaseList := interface listPurchasesOf: 'invalidID']
+	self should:[		thePurchaseList := system listPurchasesOf: 'invalidID']
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidUserIDError.
@@ -541,28 +510,28 @@ test11SystemCantListPurchasesOfAUserWithAnInvalidID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:56:22'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:30:07'!
 test12CantCheckoutACartAfter30MinutesOfInactivity
 	
-	|interface userID aCartID cashier |
+	|system userID aCartID cashier |
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	cashier := objectsFactory aCashier.
 	
-	interface theSystemClock advanceClockInMinutes: 35.
+	system theSystemClock advanceClockInMinutes: 35*minute.
 
-	self should:[		interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.]
+	self should:[		system checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.]
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem expiredCartError .
-			self deny: (interface checkoutWasDoneCorrectlyWith: cashier)].	
+			self deny: (system checkoutWasDoneCorrectlyWith: cashier)].	
 	
 
 	
@@ -574,22 +543,22 @@ test12CantCheckoutACartAfter30MinutesOfInactivity
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:43:55'!
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:30:16'!
 test13AddingABookAfter30MinutesOfInactivityAddsTheBookToANewCart
 	
-	| interface userID aCartID cartItems |
+	| system userID aCartID cartItems |
 	
 	userID:= 41395965.
 	
-	interface := objectsFactory anInterfaceWithAValidUser.
+	system := objectsFactory anSystemWithAValidUser.
 	
-	aCartID := interface createCartFor: userID.
+	aCartID := system createCartFor: userID.
 	
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
-	interface theSystemClock advanceClockInMinutes: 35.
-	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	cartItems := system listTheCartWithID: aCartID.
 	
-	cartItems := interface listTheCartWithID: aCartID.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	system theSystemClock advanceClockInMinutes: 35*minute.
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
 	
 	self assert: (cartItems size = 1).
 	
@@ -600,6 +569,63 @@ test13AddingABookAfter30MinutesOfInactivityAddsTheBookToANewCart
 
 	
 	! !
+
+!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:30:29'!
+test14ListingTheCartAfter30MinutesListsAnEmptyCart
+	
+	| system userID aCartID cartItems |
+	
+	userID:= 41395965.
+	
+	system := objectsFactory anSystemWithAValidUser.
+	
+	aCartID := system createCartFor: userID.
+	
+	system theSystemClock advanceClockInMinutes: 15*minute.
+		
+	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	
+	system theSystemClock advanceClockInMinutes: 35*minute.
+	
+	cartItems := system listTheCartWithID: aCartID.
+	
+	self assert: (cartItems size = 0).
+	
+	
+
+	
+
+
+	
+	! !
+
+
+!UserSystemTest methodsFor: 'set up' stamp: 'MW 2/23/2021 15:09:27'!
+setUp
+	
+	|debitedAmountFromCreditCard debitedCreditCard|
+
+	objectsFactory := PublisherTestObjectsFactory new.
+	
+	self merchantProcessorBehaviour: [ :anAmountToDebit :aCreditCard | 
+	debitedAmountFromCreditCard := anAmountToDebit.
+	debitedCreditCard := aCreditCard.].! !
+
+
+!UserSystemTest methodsFor: 'testing - private' stamp: 'LF 2/20/2021 20:41:56'!
+debit: anAmountToDebit from: aCreditCard
+
+	^merchantProcessorBehaviour value: anAmountToDebit value: aCreditCard! !
+
+!UserSystemTest methodsFor: 'testing - private' stamp: 'LF 2/20/2021 20:47:09'!
+merchantProcessorBehaviour: newBehaviour
+
+	merchantProcessorBehaviour := newBehaviour! !
+
+!UserSystemTest methodsFor: 'testing - private' stamp: 'LF 2/20/2021 20:36:58'!
+merchantProcessorForTest
+	
+	^self! !
 
 
 !classDefinition: #Cart category: 'TusLibros'!
@@ -631,6 +657,16 @@ add: aBook quantity: numberOfBooksToAdd
 	
 	! !
 
+
+!Cart methodsFor: 'accessing' stamp: 'LF 2/20/2021 18:15:57'!
+books
+
+	^books.! !
+
+!Cart methodsFor: 'accessing' stamp: 'LF 2/22/2021 20:34:32'!
+lastActivityTime
+
+	^lastActivityTime ! !
 
 !Cart methodsFor: 'accessing' stamp: 'LL 1/20/2021 21:51:06'!
 quantityOf: aBook
@@ -665,20 +701,10 @@ assertValidNumberOfCopies: numberOfBooksToAdd
 	^ numberOfBooksToAdd strictlyPositive ifFalse: [ self error: self class invalidNumberOfCopiesErrorMessage ]! !
 
 
-!Cart methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:15:57'!
-books
-
-	^books.! !
-
-!Cart methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:49:10'!
+!Cart methodsFor: 'removing' stamp: 'MW 2/23/2021 15:49:10'!
 clearCart
 
 	books := Bag new.! !
-
-!Cart methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 20:34:32'!
-lastActivityTime
-
-	^lastActivityTime ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -879,8 +905,8 @@ anExpiredCreditCard
 	lastMonth := (FixedGregorianDate today previous: GregorianMonth oneMonth) monthOfYear.
 	^CreditCard of: 'Juan Perez' number: 11111111 expiringOn: lastMonth.! !
 
-!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:48:14'!
-anInterfaceWithAValidUser
+!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 17:18:45'!
+anSystemWithAValidUser
 
 	|userID userPassword interface|
 	
@@ -888,7 +914,7 @@ anInterfaceWithAValidUser
 	
 	userPassword:= 'todoBitcoin'.
 	
-	interface := UserSystem newInterface.
+	interface := UserSystem newSystem.
 	
 	interface signUpUserID: userID withPassword: userPassword	.
 	
@@ -925,17 +951,25 @@ Object subclass: #TestClock
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!TestClock methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:47:27'!
-advanceClockInMinutes: anAmountOfMInutes
-	
-	time := (GregorianDateTime date: FixedGregorianDate today timeOfDay: (TimeOfDay hours: (Time now hour) minutes: (Time now minute) + anAmountOfMInutes)).! !
-
-!TestClock methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 21:29:06'!
+!TestClock methodsFor: 'initialization' stamp: 'LF 2/22/2021 21:29:06'!
 initializeTestClock
 
 	time:= GregorianDateTime now.! !
 
-!TestClock methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 21:10:21'!
+
+!TestClock methodsFor: 'main protocol' stamp: 'LF 2/23/2021 16:47:37'!
+advanceClockInMinutes: anAmountOfMInutes
+	
+	|localHours localMinutes|
+	
+	localHours:= time timeOfDay hours.
+	
+	localMinutes := time timeOfDay minutes + anAmountOfMInutes.
+	
+	time := (GregorianDateTime date: FixedGregorianDate today timeOfDay: (TimeOfDay hours: localHours/hour minutes: localMinutes/minute )).! !
+
+
+!TestClock methodsFor: 'accessing' stamp: 'LF 2/22/2021 21:10:21'!
 now
 
 	^time.! !
@@ -959,43 +993,45 @@ Object subclass: #User
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:29:46'!
-addPurchase: purchasedItems
-
-	purchaseList add: purchasedItems.! !
-
-!User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:30:08'!
+!User methodsFor: 'initialization' stamp: 'LF 2/20/2021 17:30:08'!
 assignCart: anEmptyCart withID: theCartID.
 
 	cart:= anEmptyCart.! !
 
-!User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 16:47:25'!
-cart
-
-	^cart.! !
-
-!User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:15:47'!
-cartID
-
-	^id.! !
-
-!User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 16:54:25'!
-idNumber
-
-	^id ! !
-
-!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:27:40'!
-purchaseList
-
-	^purchaseList.! !
-
-!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:28:31'!
+!User methodsFor: 'initialization' stamp: 'MW 2/23/2021 15:28:31'!
 setUpWith: anId and: aPassword.
 
 	id := anId.
 	password := aPassword.
 	purchaseList := OrderedCollection new.
 	! !
+
+
+!User methodsFor: 'accessing' stamp: 'LF 2/20/2021 16:47:25'!
+cart
+
+	^cart.! !
+
+!User methodsFor: 'accessing' stamp: 'LF 2/20/2021 17:15:47'!
+cartID
+
+	^id.! !
+
+!User methodsFor: 'accessing' stamp: 'LF 2/20/2021 16:54:25'!
+idNumber
+
+	^id ! !
+
+!User methodsFor: 'accessing' stamp: 'MW 2/23/2021 15:27:40'!
+purchaseList
+
+	^purchaseList.! !
+
+
+!User methodsFor: 'adding' stamp: 'MW 2/23/2021 15:29:46'!
+addPurchase: purchasedItems
+
+	purchaseList add: purchasedItems.! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1016,33 +1052,91 @@ Object subclass: #UserSystem
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:53:22'!
+!UserSystem methodsFor: 'initialization' stamp: 'LF 2/23/2021 17:18:10'!
+initializeSystem
+
+	userDatabase := OrderedCollection new.
+	aClock := TestClock newTestClock.! !
+
+!UserSystem methodsFor: 'initialization' stamp: 'LF 2/20/2021 16:56:59'!
+signUpUserID: anUserID withPassword: anUserPassword
+	
+	|user|
+	
+	((anUserID isString) or:(anUserID asString size <8))ifTrue:[self error: self class invalidUserIDError].	
+	
+	user := User initializeWithID: anUserID andPassword:anUserPassword.
+	
+	userDatabase add: user.
+! !
+
+
+!UserSystem methodsFor: 'asserting' stamp: 'LF 2/23/2021 16:02:10'!
+assertCartExpirationAfter: anAmountOfMinutes
+
+	^((GregorianDateTime now distanceTo: aClock now) < (30 *minute ))! !
+
+!UserSystem methodsFor: 'asserting' stamp: 'LF 2/23/2021 16:01:30'!
+assertCartIsNotExpiredAfter: anAmountOfMinutes
+
+	((GregorianDateTime now distanceTo: aClock now) < (30 *minute ))ifFalse:[self error: self class expiredCartError].! !
+
+!UserSystem methodsFor: 'asserting' stamp: 'LF 2/20/2021 20:58:07'!
+checkoutWasDoneCorrectlyWith: aCashier 
+	
+	^aCashier paymentWasDoneCorrectly.! !
+
+!UserSystem methodsFor: 'asserting' stamp: 'LF 2/20/2021 18:06:24'!
+theBook: aBook wasAddedCorrectlyTo: aCartID 
+	
+	|aCart|
+	
+	aCart := (self userWithID: aCartID) cart.
+	
+	^aCart includes: aBook.
+	
+	! !
+
+!UserSystem methodsFor: 'asserting' stamp: 'LF 2/20/2021 17:28:35'!
+theUserIsRegisteredOnTheDatabase: theUserIDToCheck
+
+	userDatabase do:[:anUser | (anUser idNumber = theUserIDToCheck) ifTrue:[^true]].
+	^false.
+
+	
+	
+! !
+
+
+!UserSystem methodsFor: 'accessing' stamp: 'LF 2/20/2021 18:45:53'!
+cartWithID: aCartID
+
+	userDatabase do:[:anUser | (anUser idNumber = aCartID) ifTrue:[^anUser cart]ifFalse:[self error: self class invalidCartIDError]].
+! !
+
+!UserSystem methodsFor: 'accessing' stamp: 'MW 2/23/2021 15:18:05'!
+userWithID: anUserID
+
+	userDatabase do:[:anUser | (anUser idNumber = anUserID) ifTrue:[^anUser]].
+	^false.
+
+! !
+
+
+!UserSystem methodsFor: 'main protocol' stamp: 'LF 2/23/2021 16:02:55'!
 addToTheCart: aCartID theBook: aBook aTotalOf: quantityOfTheBook 
 	
 	|cart|
 		
 	cart:= self cartWithID: aCartID.
 	
-	self should:[(self assertCartIsNotExpiredAfter: 30*minute)].
-	
-	
+	(self assertCartExpirationAfter: 30*minute)ifFalse:[cart clearCart].
+		
 	cart add: aBook quantity: quantityOfTheBook
 	
 	! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:51:15'!
-assertCartIsNotExpiredAfter: anAmountOfMinutes
-
-	((GregorianDateTime now distanceTo: aClock now) < (30 *minute ))ifFalse:[self error: self class expiredCartError].
-	^false.! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:45:53'!
-cartWithID: aCartID
-
-	userDatabase do:[:anUser | (anUser idNumber = aCartID) ifTrue:[^anUser cart]ifFalse:[self error: self class invalidCartIDError]].
-! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:37:52'!
+!UserSystem methodsFor: 'main protocol' stamp: 'MW 2/23/2021 15:37:52'!
 checkoutCart: aCartID using: aCreditCard with: aCashier on: anInterfaceTest 
 	
 	| cart user |
@@ -1060,12 +1154,7 @@ checkoutCart: aCartID using: aCreditCard with: aCashier on: anInterfaceTest
 	
 	! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:58:07'!
-checkoutWasDoneCorrectlyWith: aCashier 
-	
-	^aCashier paymentWasDoneCorrectly.! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:24:26'!
+!UserSystem methodsFor: 'main protocol' stamp: 'LF 2/20/2021 17:24:26'!
 createCartFor: anUserID
 	
 	|objectsFactory user| 
@@ -1078,13 +1167,7 @@ createCartFor: anUserID
 	
 	^user cartID.! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:38:43'!
-initializeInterface
-
-	userDatabase := OrderedCollection new.
-	aClock := TestClock newTestClock.! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:35:37'!
+!UserSystem methodsFor: 'main protocol' stamp: 'MW 2/23/2021 15:35:37'!
 listPurchasesOf:userID
 	
 	| user |
@@ -1095,77 +1178,40 @@ listPurchasesOf:userID
 	^user purchaseList.
 	! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 19:24:59'!
+!UserSystem methodsFor: 'main protocol' stamp: 'LF 2/23/2021 16:27:08'!
 listTheCartWithID: aCartID 
 	
 	|aCart|
 	
 	aCart := self cartWithID: aCartID.
 	
+	(self assertCartExpirationAfter: 30*minute)ifFalse:[aCart clearCart].
+	
 	^aCart books.
 	
 	! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:27:57'!
-merchantProcessorBehaviour: newBehaviour
 
-	merchantProcessorBehaviour := newBehaviour! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 20:27:46'!
-merchantProcessorForTest
-	
-	^self! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 16:56:59'!
-signUpUserID: anUserID withPassword: anUserPassword
-	
-	|user|
-	
-	((anUserID isString) or:(anUserID asString size <8))ifTrue:[self error: self class invalidUserIDError].	
-	
-	user := User initializeWithID: anUserID andPassword:anUserPassword.
-	
-	userDatabase add: user.
-! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:06:24'!
-theBook: aBook wasAddedCorrectlyTo: aCartID 
-	
-	|aCart|
-	
-	aCart := (self userWithID: aCartID) cart.
-	
-	^aCart includes: aBook.
-	
-	! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:16:57'!
+!UserSystem methodsFor: 'system primitives' stamp: 'LF 2/20/2021 18:16:57'!
 theList: aListOfProducts hasALengthOf: aPossibleLength 
 	
 	^aListOfProducts size = aPossibleLength .! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 21:25:22'!
+!UserSystem methodsFor: 'system primitives' stamp: 'LF 2/22/2021 21:25:22'!
 theSystemClock
 
 	^aClock.! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:28:35'!
-theUserIsRegisteredOnTheDatabase: theUserIDToCheck
 
-	userDatabase do:[:anUser | (anUser idNumber = theUserIDToCheck) ifTrue:[^true]].
-	^false.
+!UserSystem methodsFor: 'testing' stamp: 'LF 2/20/2021 20:27:57'!
+merchantProcessorBehaviour: newBehaviour
 
+	merchantProcessorBehaviour := newBehaviour! !
+
+!UserSystem methodsFor: 'testing' stamp: 'LF 2/20/2021 20:27:46'!
+merchantProcessorForTest
 	
-	
-! !
-
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:18:05'!
-userWithID: anUserID
-
-	userDatabase do:[:anUser | (anUser idNumber = anUserID) ifTrue:[^anUser]].
-	^false.
-
-! !
+	^self! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -1173,21 +1219,22 @@ userWithID: anUserID
 UserSystem class
 	instanceVariableNames: ''!
 
-!UserSystem class methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 21:34:15'!
+!UserSystem class methodsFor: 'testing' stamp: 'LF 2/22/2021 21:34:15'!
 expiredCartError
 	
 	^'Cart expired after 35 minutes of inactivity'.! !
 
-!UserSystem class methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:44:50'!
+!UserSystem class methodsFor: 'testing' stamp: 'LF 2/20/2021 18:44:50'!
 invalidCartIDError
 
 	^'CartID does not match with any Cart from the user'.! !
 
-!UserSystem class methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 16:04:14'!
+!UserSystem class methodsFor: 'testing' stamp: 'LF 2/20/2021 16:04:14'!
 invalidUserIDError
 	^'User ID must be a 8 digit number'.! !
 
-!UserSystem class methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 21:05:33'!
-newInterface
 
-	^self new initializeInterface.! !
+!UserSystem class methodsFor: 'instance creation' stamp: 'LF 2/23/2021 17:18:10'!
+newSystem
+
+	^self new initializeSystem.! !
