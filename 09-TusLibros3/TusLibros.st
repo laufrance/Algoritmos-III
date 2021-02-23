@@ -267,17 +267,16 @@ merchantProcessorForTest
 	
 	^self! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:26:34'!
+!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:09:27'!
 setUp
 	
 	|debitedAmountFromCreditCard debitedCreditCard|
 
 	objectsFactory := PublisherTestObjectsFactory new.
 	
-		
-		self merchantProcessorBehaviour: [ :anAmountToDebit :aCreditCard | 
-		debitedAmountFromCreditCard := anAmountToDebit.
-		debitedCreditCard := aCreditCard.].! !
+	self merchantProcessorBehaviour: [ :anAmountToDebit :aCreditCard | 
+	debitedAmountFromCreditCard := anAmountToDebit.
+	debitedCreditCard := aCreditCard.].! !
 
 !UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:49:27'!
 test01UserWithAnInvalidIDCantSignUpInTheSystem
@@ -480,7 +479,7 @@ test09SystemCantCheckoutCartWithAnInvalidCartID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 15:03:29'!
+!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:17:00'!
 test10SystemCanListPurchasesOfAUserWithAValidID
 	
 	|interface userID aCartID cashier thePurchaseList|
@@ -495,7 +494,7 @@ test10SystemCanListPurchasesOfAUserWithAValidID
 	
 	cashier := objectsFactory aCashier.
 	
-	interface checkoutCart: 'invalidCartID' using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
+	interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
 	
 	thePurchaseList := interface listPurchasesOf: userID.
 	
@@ -511,7 +510,7 @@ test10SystemCanListPurchasesOfAUserWithAValidID
 	
 	! !
 
-!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 15:04:05'!
+!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:25:16'!
 test11SystemCantListPurchasesOfAUserWithAnInvalidID
 	
 	|interface userID aCartID cashier thePurchaseList|
@@ -526,13 +525,13 @@ test11SystemCantListPurchasesOfAUserWithAnInvalidID
 	
 	cashier := objectsFactory aCashier.
 	
-	interface checkoutCart: 'invalidCartID' using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
+	interface checkoutCart: aCartID using: objectsFactory aValidCreditCard with: cashier on: self merchantProcessorForTest.
 
-	"self should:[		thePurchaseList := interface listPurchasesOf: 'invalidID']
+	self should:[		thePurchaseList := interface listPurchasesOf: 'invalidID']
 		raise: Error 
 		withExceptionDo: [ :anException |
 			self assert: anException messageText equals: UserSystem invalidUserIDError.
-			self assert: (thePurchaseList size = 1).].	"
+			self assert: (thePurchaseList = nil).].	
 	
 	
 
@@ -566,6 +565,33 @@ test12CantCheckoutACartAfter30MinutesOfInactivity
 			self deny: (interface checkoutWasDoneCorrectlyWith: cashier)].	
 	
 
+	
+	
+
+	
+
+
+	
+	! !
+
+!UserSystemTest methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:43:55'!
+test13AddingABookAfter30MinutesOfInactivityAddsTheBookToANewCart
+	
+	| interface userID aCartID cartItems |
+	
+	userID:= 41395965.
+	
+	interface := objectsFactory anInterfaceWithAValidUser.
+	
+	aCartID := interface createCartFor: userID.
+	
+	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	interface theSystemClock advanceClockInMinutes: 35.
+	interface addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
+	
+	cartItems := interface listTheCartWithID: aCartID.
+	
+	self assert: (cartItems size = 1).
 	
 	
 
@@ -643,6 +669,11 @@ assertValidNumberOfCopies: numberOfBooksToAdd
 books
 
 	^books.! !
+
+!Cart methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:49:10'!
+clearCart
+
+	books := Bag new.! !
 
 !Cart methodsFor: 'as yet unclassified' stamp: 'LF 2/22/2021 20:34:32'!
 lastActivityTime
@@ -923,10 +954,15 @@ newTestClock
 
 !classDefinition: #User category: 'TusLibros'!
 Object subclass: #User
-	instanceVariableNames: 'id password cart'
+	instanceVariableNames: 'id password cart purchaseList'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
+
+!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:29:46'!
+addPurchase: purchasedItems
+
+	purchaseList add: purchasedItems.! !
 
 !User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:30:08'!
 assignCart: anEmptyCart withID: theCartID.
@@ -948,11 +984,17 @@ idNumber
 
 	^id ! !
 
-!User methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 16:46:10'!
+!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:27:40'!
+purchaseList
+
+	^purchaseList.! !
+
+!User methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:28:31'!
 setUpWith: anId and: aPassword.
 
-	id:= anId.
-	password:= aPassword.
+	id := anId.
+	password := aPassword.
+	purchaseList := OrderedCollection new.
 	! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
@@ -969,26 +1011,30 @@ initializeWithID: id andPassword: password
 
 !classDefinition: #UserSystem category: 'TusLibros'!
 Object subclass: #UserSystem
-	instanceVariableNames: 'userDatabase merchantProcessorBehaviour aClock purchaseList'
+	instanceVariableNames: 'userDatabase merchantProcessorBehaviour aClock'
 	classVariableNames: ''
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 19:23:47'!
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:53:22'!
 addToTheCart: aCartID theBook: aBook aTotalOf: quantityOfTheBook 
 	
 	|cart|
-	
+		
 	cart:= self cartWithID: aCartID.
+	
+	self should:[(self assertCartIsNotExpiredAfter: 30*minute)].
+	
 	
 	cart add: aBook quantity: quantityOfTheBook
 	
 	! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:55:36'!
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:51:15'!
 assertCartIsNotExpiredAfter: anAmountOfMinutes
 
-	((GregorianDateTime now distanceTo: aClock now) < (30 *minute ))ifFalse:[self error: self class expiredCartError].! !
+	((GregorianDateTime now distanceTo: aClock now) < (30 *minute ))ifFalse:[self error: self class expiredCartError].
+	^false.! !
 
 !UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 18:45:53'!
 cartWithID: aCartID
@@ -996,18 +1042,20 @@ cartWithID: aCartID
 	userDatabase do:[:anUser | (anUser idNumber = aCartID) ifTrue:[^anUser cart]ifFalse:[self error: self class invalidCartIDError]].
 ! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:55:55'!
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:37:52'!
 checkoutCart: aCartID using: aCreditCard with: aCashier on: anInterfaceTest 
 	
-	|cart |
+	| cart user |
 	
 	self assertCartIsNotExpiredAfter: 30*minute.
 	
 	cart := self cartWithID: aCartID.
+	user := self userWithID: aCartID.
 	
 	aCashier checkout: cart payingWith: aCreditCard through: anInterfaceTest on: 	GregorianDateTime now.
 	
-	purchaseList add: cart books.
+	user addPurchase: cart books.
+
 
 	
 	! !
@@ -1030,12 +1078,22 @@ createCartFor: anUserID
 	
 	^user cartID.! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/23/2021 14:51:39'!
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:38:43'!
 initializeInterface
 
 	userDatabase := OrderedCollection new.
-	purchaseList := OrderedCollection new.
 	aClock := TestClock newTestClock.! !
+
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:35:37'!
+listPurchasesOf:userID
+	
+	| user |
+	
+	(self theUserIsRegisteredOnTheDatabase: userID) ifFalse:[self error: self class invalidUserIDError].
+	user := self userWithID: userID.
+	
+	^user purchaseList.
+	! !
 
 !UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 19:24:59'!
 listTheCartWithID: aCartID 
@@ -1101,10 +1159,11 @@ theUserIsRegisteredOnTheDatabase: theUserIDToCheck
 	
 ! !
 
-!UserSystem methodsFor: 'as yet unclassified' stamp: 'LF 2/20/2021 17:49:19'!
+!UserSystem methodsFor: 'as yet unclassified' stamp: 'MW 2/23/2021 15:18:05'!
 userWithID: anUserID
 
 	userDatabase do:[:anUser | (anUser idNumber = anUserID) ifTrue:[^anUser]].
+	^false.
 
 ! !
 
