@@ -570,7 +570,7 @@ test13AddingABookAfter30MinutesOfInactivityAddsTheBookToANewCart
 	
 	! !
 
-!UserSystemTest methodsFor: 'testing' stamp: 'LF 2/23/2021 17:30:29'!
+!UserSystemTest methodsFor: 'testing' stamp: 'MW 2/25/2021 00:04:42'!
 test14ListingTheCartAfter30MinutesListsAnEmptyCart
 	
 	| system userID aCartID cartItems |
@@ -582,9 +582,7 @@ test14ListingTheCartAfter30MinutesListsAnEmptyCart
 	aCartID := system createCartFor: userID.
 	
 	system theSystemClock advanceClockInMinutes: 15*minute.
-		
 	system addToTheCart: aCartID theBook: objectsFactory bookFromTheEditorial aTotalOf: 1.
-	
 	system theSystemClock advanceClockInMinutes: 35*minute.
 	
 	cartItems := system listTheCartWithID: aCartID.
@@ -872,17 +870,19 @@ Object subclass: #PublisherTestObjectsFactory
 	poolDictionaries: ''
 	category: 'TusLibros'!
 
-!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'LL 2/16/2021 19:41:18'!
+!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'MW 2/25/2021 00:05:56'!
 aCashier
 
 	| salesBook |
+	
 	salesBook := OrderedCollection new.
 	^ Cashier registeringSalesOn: salesBook.! !
 
-!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'LL 2/16/2021 19:45:08'!
+!PublisherTestObjectsFactory methodsFor: 'as yet unclassified' stamp: 'MW 2/25/2021 00:06:02'!
 aValidCreditCard
 
 	| nextMonth |
+	
 	nextMonth := (FixedGregorianDate today next: GregorianMonth oneMonth) monthOfYear.
 	^CreditCard of: 'Juan Perez' number: 11111111 expiringOn: nextMonth.! !
 
@@ -957,7 +957,7 @@ initializeTestClock
 	time:= GregorianDateTime now.! !
 
 
-!TestClock methodsFor: 'main protocol' stamp: 'LF 2/23/2021 16:47:37'!
+!TestClock methodsFor: 'main protocol' stamp: 'MW 2/25/2021 13:42:34'!
 advanceClockInMinutes: anAmountOfMInutes
 	
 	|localHours localMinutes|
@@ -966,7 +966,9 @@ advanceClockInMinutes: anAmountOfMInutes
 	
 	localMinutes := time timeOfDay minutes + anAmountOfMInutes.
 	
-	time := (GregorianDateTime date: FixedGregorianDate today timeOfDay: (TimeOfDay hours: localHours/hour minutes: localMinutes/minute )).! !
+	((localHours = (23*hour))&(localMinutes >= (60*minute))) ifTrue:[(localHours := 0*hour) & (localMinutes := localMinutes - 60*minute)].
+	
+	time := (GregorianDateTime date: FixedGregorianDate today timeOfDay: (TimeOfDay hours: localHours/hour minutes: localMinutes/minute)).! !
 
 
 !TestClock methodsFor: 'accessing' stamp: 'LF 2/22/2021 21:10:21'!
